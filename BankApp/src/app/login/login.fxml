@@ -20,7 +20,7 @@
             <Label text="personnummer:"  />
             <TextField fx:id="socialNoInput"  />
             <Label  text="lösenord:"  />
-            <TextField fx:id="passwordInput"  />
+            <PasswordField fx:id="passwordInput"  />
             <Button fx:id="inloggBtn" onAction="#login" text="Logga in" />
             <Label  fx:id="errorNoInput" style="visibility: hidden" text="Vänligen fyll i båda fälten" />
             <Label  fx:id="errorWrongInput" style="visibility: hidden" text="Fel användaruppgifter" />

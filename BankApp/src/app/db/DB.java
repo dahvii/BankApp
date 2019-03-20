@@ -12,11 +12,11 @@ public abstract class DB {
         return Database.getInstance().prepareStatement(SQLQuery);
     }
 
-    public static User getMatchingUser(String username, String password){
+    public static User getMatchingUser(String socialNo, String password){
         User result = null;
-        PreparedStatement ps = prep("SELECT * FROM users WHERE username = ? AND password = ?");
+        PreparedStatement ps = prep("SELECT * FROM users WHERE socialNo = ? AND password = ?");
         try {
-            ps.setString(1, username);
+            ps.setString(1, socialNo);
             ps.setString(2, password);
             result = (User)new ObjectMapper<>(User.class).mapOne(ps.executeQuery());
         } catch (Exception e) { e.printStackTrace(); }

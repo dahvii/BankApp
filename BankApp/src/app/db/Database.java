@@ -13,7 +13,8 @@ public class Database {
     }
     private Database() { connectToDb(); }
 
-    final String connectionURL = "jdbc:mysql://localhost/sql-intro?user=root&password=hej&serverTimezone=UTC ";
+
+    final String connectionURL = "jdbc:mysql://localhost/bankApp?user=root&password=hej&serverTimezone=UTC ";
     private Connection conn = null;
     private HashMap<String, PreparedStatement> preparedStatements = new HashMap<>();
 

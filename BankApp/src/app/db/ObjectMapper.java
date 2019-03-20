@@ -27,6 +27,10 @@ public class ObjectMapper<T> {
     }
 
     public T map(Map<String, Object> row) {
+        if (row.isEmpty()) {
+            return null;
+        }
+
         try {
             T dto = (T) clazz.getConstructor().newInstance();
             for (Map.Entry<String, Object> entity : row.entrySet()) {
@@ -65,7 +69,7 @@ public class ObjectMapper<T> {
     }
 
     public HashMap<String, Object> resultSetToHashMap(ResultSet rs){
-        HashMap<String, Object> row = null;
+        HashMap<String, Object> row = new HashMap<>();
         try {
             ResultSetMetaData md = rs.getMetaData();
             int columns = md.getColumnCount();
@@ -96,6 +100,7 @@ public class ObjectMapper<T> {
 
         return list;
     }
+
 
     private T convertInstanceOfObject(Object o) {
         try {

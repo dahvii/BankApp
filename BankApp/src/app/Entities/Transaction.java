@@ -9,9 +9,9 @@ public class Transaction {
     @Column("id")
     private long id;
     @Column("fromAccount")
-    private long fromAccount;
+    private String fromAccount;
     @Column("toAccount")
-    private long toAccount;
+    private String toAccount;
     @Column("amount")
     private double amount;
     @Column ("message")
@@ -21,11 +21,11 @@ public class Transaction {
     @Column("date")
     private LocalDate date;
 
-    public long getFromAccount() {
+    public String getFromAccount() {
         return fromAccount;
     }
 
-    public long getToAccount() {
+    public String getToAccount() {
         return toAccount;
     }
 

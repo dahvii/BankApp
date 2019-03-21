@@ -2,18 +2,31 @@ package app.home;
 
 import app.Main;
 import app.account.AccountController;
+import app.db.DB;
+import app.db.Database;
+import app.login.LoginController;
 import app.transaction.TransactionController;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import jdk.jfr.DataAmount;
 
 import java.io.IOException;
 
 public class HomeController {
 
     @FXML
+    Label userLabel;
+
+    @FXML
     void initialize(){
+        userLabel.setText("Inloggad som: "+LoginController.getUser().getName());
+        System.out.println(LoginController.getUser().getName());
+
+
+
         // load accounts from db using LoginController.user.getId() and display them
 
     }

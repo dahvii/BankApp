@@ -1,9 +1,6 @@
 package app.db;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.HashMap;
 
 public class Database {
@@ -31,7 +28,28 @@ public class Database {
 
     private void connectToDb(){
         try { conn = DriverManager.getConnection(connectionURL);
-            System.out.println("connected to DB");}
-        catch (SQLException e) { e.printStackTrace(); }
+        } catch (SQLException e) { e.printStackTrace(); }
+    }
+
+    public  ResultSet executeQuery(PreparedStatement statement) {
+        try {
+            ResultSet result = statement.executeQuery();
+            return result;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public  void updateTable(String sql) {
+        try {
+            Statement statement= conn.createStatement();
+            statement.executeUpdate(sql);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
+

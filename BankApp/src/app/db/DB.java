@@ -3,6 +3,9 @@ package app.db;
 import app.Entities.User;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 
 /** A Helper class for interacting with the Database using short-commands */
@@ -21,6 +24,15 @@ public abstract class DB {
             result = (User)new ObjectMapper<>(User.class).mapOne(ps.executeQuery());
         } catch (Exception e) { e.printStackTrace(); }
         return result; // return User;
+    }
+
+    public static ResultSet executeQuery(String SQLQuery){
+        ResultSet result = Database.getInstance().executeQuery(prep(SQLQuery));
+        return result;
+    }
+
+    public static void updateTable(String sql) {
+        Database.getInstance().updateTable(sql);
     }
 
     /*

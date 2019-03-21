@@ -5,7 +5,7 @@ import java.time.LocalDate;
 
 public class Account {
     @Column("bankNr")
-    private long bankNr;
+    private String bankNr;
     @Column("name")
     private String name;
     @Column("usage")
@@ -20,7 +20,7 @@ public class Account {
     }
 
 
-    public long getBankNr() {
+    public String getBankNr() {
         return bankNr;
     }
 

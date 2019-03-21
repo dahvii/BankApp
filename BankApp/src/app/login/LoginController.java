@@ -1,10 +1,13 @@
 package app.login;
 
 
+import app.AddToTable;
+import app.Entities.Account;
 import app.Entities.User;
 import app.Main;
 import app.db.DB;
 import app.db.Database;
+import app.db.ObjectMapper;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -14,6 +17,12 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
 import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class LoginController {
 
@@ -29,16 +38,13 @@ public class LoginController {
     public static User getUser() { return user; }
 
     @FXML
-    private void initialize() {
-        System.out.println("initialize login");
-        loadUser();
+    void initialize(){
+
+        // load accounts from db using LoginController.user.getId() and display them
+
     }
 
-    void loadUser(){
-//        user = DB.getMatchingUser("Kalle", "abc123?");
-        // if null display error
-        // else switchScene to Home
-    }
+
 
     void switchScene(String pathname) {
         try {
@@ -66,8 +72,7 @@ public class LoginController {
                 errorWrongInput.setStyle("visibility: visible;");
             }
             else{
-                System.out.println("SUCCESS");
-                switchScene("/app/home/home.fxml");
+                goToHome();
             }
             //socialNoInput.clear();
             //passwordInput.clear();

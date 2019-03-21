@@ -6,9 +6,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="388.0" prefWidth="533.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.home.HomeController">
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="388.0" prefWidth="408.0" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.home.HomeController">
    <children>
-      <VBox prefHeight="388.0" prefWidth="265.0">
+      <VBox fx:id= "leftContent" prefHeight="388.0" prefWidth="265.0">
          <children>
             <Label fx:id="userLabel" prefHeight="33.0" prefWidth="210.0" text="Inloggad User" />
             <Label graphicTextGap="9.0" prefHeight="46.0" prefWidth="152.0" text="SwedenBank" textOverrun="CENTER_ELLIPSIS" translateX="2.0">

@@ -49,7 +49,7 @@ public class LoginController {
     void switchScene(String pathname) {
         try {
             Parent bla = FXMLLoader.load(getClass().getResource(pathname));
-            Scene scene = new Scene(bla, 800, 600);
+            Scene scene = new Scene(bla);
             Main.stage.setScene(scene);
             Main.stage.show();
         } catch (IOException e1) {

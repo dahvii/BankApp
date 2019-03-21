@@ -1,5 +1,7 @@
 package app.db;
 
+import app.Entities.Account;
+import app.Entities.Transaction;
 import app.Entities.User;
 
 import java.sql.PreparedStatement;
@@ -49,5 +51,25 @@ public abstract class DB {
     }
     */
 
+    public static List<?> getTransactions(String bankNr){
+        List<?> result = null;
+        PreparedStatement ps = prep("SELECT * FROM transactions WHERE fromAccount = ? OR toAccount = ? ORDER BY date");
+        try {
+            ps.setString(1, bankNr);
+            ps.setString(2, bankNr);
+            result = new ObjectMapper<>(Transaction.class).map(ps.executeQuery());
+        } catch (Exception e) { e.printStackTrace(); }
+        return result; // return User;
+    }
+
+    public static List<Account> getAccounts(String socialNo){
+        List<Account> result = null;
+        PreparedStatement ps = prep("SELECT * FROM accounts WHERE user = ?");
+        try {
+            ps.setString(1, socialNo);
+            //result = (List<Account>)new ObjectMapper<>(Transaction.class).map(ps.executeQuery());
+        } catch (Exception e) { e.printStackTrace(); }
+        return result; // return User;
+    }
 
 }

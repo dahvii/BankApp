@@ -33,8 +33,8 @@ public abstract class DB {
         return result;
     }
 
-    public static void updateTable(String sql) {
-        Database.getInstance().updateTable(sql);
+    public static ResultSet updateTable(String sql) {
+        return Database.getInstance().updateTable(sql);
     }
 
     /*

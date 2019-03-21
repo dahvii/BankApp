@@ -42,14 +42,17 @@ public class Database {
         return null;
     }
 
-    public  void updateTable(String sql) {
+    public  ResultSet updateTable(String sql) {
         try {
             Statement statement= conn.createStatement();
-            statement.executeUpdate(sql);
+            statement.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
+            ResultSet generatedKeys = statement.getGeneratedKeys();
+            return generatedKeys;
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return null;
     }
 }
 

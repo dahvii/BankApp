@@ -35,7 +35,9 @@ public class Main extends Application {
 
         Transaction transaction = new Transaction("0063527510", "0024480606", 4000, "hyra", null, sqlDate);
 
-        Transact.makeTransaction(transaction);
+        //Transact.makeTransaction(transaction);
+
+        System.out.println(Transact.subtractMoney("0022717455", 5000));
 
         launch(args);
     }

@@ -13,7 +13,8 @@ public class Database {
     }
     private Database() { connectToDb(); }
 
-    final String connectionURL = "jdbc:...";
+
+    final String connectionURL = "jdbc:mysql://localhost/bankApp?user=root&password=hej&serverTimezone=UTC ";
     private Connection conn = null;
     private HashMap<String, PreparedStatement> preparedStatements = new HashMap<>();
 
@@ -22,14 +23,15 @@ public class Database {
     public PreparedStatement prepareStatement(String SQLQuery){
         PreparedStatement ps = preparedStatements.get(SQLQuery);
         if (ps == null) {
-            try { conn.prepareStatement(SQLQuery); }
+            try { ps = conn.prepareStatement(SQLQuery); }
             catch (SQLException e) { e.printStackTrace(); }
         }
         return ps;
     }
 
     private void connectToDb(){
-        try { conn = DriverManager.getConnection(connectionURL); }
+        try { conn = DriverManager.getConnection(connectionURL);
+            System.out.println("connected to DB");}
         catch (SQLException e) { e.printStackTrace(); }
     }
 }

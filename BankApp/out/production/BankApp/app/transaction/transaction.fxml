@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.transaction.TransactionController">
+   <children>
+      <BorderPane />
+      <HBox spacing="60.0">
+         <children>
+            <Label fx:id="message" text="Message" />
+            <Label fx:id="date" text="Date" />
+            <Label fx:id="amount" text="Amount" />
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>

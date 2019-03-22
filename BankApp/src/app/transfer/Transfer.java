@@ -1,4 +1,4 @@
-package app.transaction;
+package app.transfer;
 import app.Entities.Transaction;
 import app.db.DB;
 
@@ -6,7 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public abstract class Transact {
+public abstract class Transfer {
 
     public static void makeTransaction(Transaction transaction){
         //if there is enough money on account, make the transaction

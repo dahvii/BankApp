@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="317.0" prefWidth="315.0"  xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.login.LoginController">
+<VBox prefHeight="317.0" prefWidth="315.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.login.LoginController">
         <children>
       <Label text="SwedenBank">
          <font>
@@ -21,10 +21,10 @@
                 </font>
             </Label>
             <Label text="personnummer:" />
-            <TextField fx:id="socialNoInput" />
+            <TextField fx:id="socialNoInput" text="test" />
             <Label text="lösenord:" />
-            <PasswordField fx:id="passwordInput" />
-            <Button fx:id="inloggBtn" onAction="#login" text="Logga in" />
+            <PasswordField fx:id="passwordInput" text="test" />
+            <Button fx:id="logInBtn" onAction="#login" text="Logga in" />
             <Label fx:id="errorNoInput" style="visibility: hidden" text="Vänligen fyll i båda fälten" />
             <Label fx:id="errorWrongInput" style="visibility: hidden" text="Fel användaruppgifter" />
 

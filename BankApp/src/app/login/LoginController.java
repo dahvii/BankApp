@@ -12,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -32,6 +33,8 @@ public class LoginController {
     Label errorWrongInput, errorNoInput;
     @FXML
     PasswordField passwordInput;
+    @FXML
+    Button logInBtn;
 
     // Use this in other Controllers to get "the currently logged in user".
     private static User user = null;
@@ -39,17 +42,15 @@ public class LoginController {
 
     @FXML
     void initialize(){
-
-        // load accounts from db using LoginController.user.getId() and display them
-
+        logInBtn.setDefaultButton(true);
     }
 
 
 
     void switchScene(String pathname) {
         try {
-            Parent bla = FXMLLoader.load(getClass().getResource(pathname));
-            Scene scene = new Scene(bla);
+            Parent parent = FXMLLoader.load(getClass().getResource(pathname));
+            Scene scene = new Scene(parent, 800, 800);
             Main.stage.setScene(scene);
             Main.stage.show();
         } catch (IOException e1) {

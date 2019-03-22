@@ -1,14 +1,12 @@
 package app;
 
 import app.Entities.Transaction;
-import app.transaction.Transact;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
@@ -35,7 +33,7 @@ public class Main extends Application {
 
         Transaction transaction = new Transaction("0063527510", "0024480606", 4000, "hyra", null, sqlDate);
 
-        //Transact.makeTransaction(transaction);
+        //Transfer.makeTransaction(transaction);
 
         launch(args);
     }

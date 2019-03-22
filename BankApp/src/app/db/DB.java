@@ -37,15 +37,36 @@ public abstract class DB {
         Database.getInstance().executeUpdate(statement);
     }
 
-    public static List<Transaction> getTransactions(String bankNr){
+    //hämtar transaktioner för ett visst konto
+    public static List<Transaction> getAccountTransactions(String bankNr, int offset, int limit){
         List<Transaction> result = null;
-        PreparedStatement ps = prep("SELECT * FROM transactions WHERE fromAccount = ? OR toAccount = ? ORDER BY date");
+        PreparedStatement ps = prep("SELECT * FROM transactions WHERE fromAccount = ? OR toAccount = ? ORDER BY date DESC LIMIT ? OFFSET ?");
         try {
             ps.setString(1, bankNr);
             ps.setString(2, bankNr);
+            ps.setInt(3, limit);
+            ps.setInt(4, offset);
             result = (List<Transaction>)(List<?>)new ObjectMapper<>(Transaction.class).map(ps.executeQuery());
         } catch (Exception e) { e.printStackTrace(); }
-        return result; // return User;
+        return result;
+    }
+
+
+    //hämtar alla transaktioner från en viss användare
+    public static List<Transaction> getUserTransactions(String socialNo, int offset, int limit){
+        List<Transaction> result = null;
+        PreparedStatement ps = prep("SELECT * FROM transactions WHERE fromAccount IN " +
+                "(SELECT bankNr from accounts WHERE user = ?) " +
+                "OR toAccount IN (SELECT bankNr from accounts WHERE user = ?)" +
+                " ORDER BY date DESC LIMIT ? OFFSET ?;");
+        try {
+            ps.setString(1, socialNo);
+            ps.setString(2, socialNo);
+            ps.setInt(3, limit);
+            ps.setInt(4, offset);
+            result = (List<Transaction>)(List<?>)new ObjectMapper<>(Transaction.class).map(ps.executeQuery());
+        } catch (Exception e) { e.printStackTrace(); }
+        return result;
     }
 
     public static List<Account> getAccounts(String socialNo){
@@ -53,7 +74,7 @@ public abstract class DB {
         PreparedStatement ps = prep("SELECT * FROM accounts WHERE user = ?");
         try {
             ps.setString(1, socialNo);
-            result = (List<Account>)(List<?>)new ObjectMapper<>(Transaction.class).map(ps.executeQuery());
+            result = (List<Account>)(List<?>)new ObjectMapper<>(Account.class).map(ps.executeQuery());
         } catch (Exception e) { e.printStackTrace(); }
         return result; // return User;
     }

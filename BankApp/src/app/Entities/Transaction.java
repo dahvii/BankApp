@@ -3,15 +3,16 @@ package app.Entities;
 
 import app.annotations.Column;
 
+import java.sql.Date;
 import java.time.LocalDate;
 
 public class Transaction {
     @Column("id")
     private long id;
     @Column("fromAccount")
-    private long fromAccount;
+    private String fromAccount;
     @Column("toAccount")
-    private long toAccount;
+    private String toAccount;
     @Column("amount")
     private double amount;
     @Column ("message")
@@ -19,13 +20,24 @@ public class Transaction {
     @Column("status")
     private String status;
     @Column("date")
-    private LocalDate date;
+    private Date date;
 
-    public long getFromAccount() {
+    public Transaction(){}
+
+    public Transaction(String fromAccount, String toAccount, double amount, String message, String status, Date date) {
+        this.fromAccount = fromAccount;
+        this.toAccount = toAccount;
+        this.amount = amount;
+        this.message = message;
+        this.status = status;
+        this.date = date;
+    }
+
+    public String getFromAccount() {
         return fromAccount;
     }
 
-    public long getToAccount() {
+    public String getToAccount() {
         return toAccount;
     }
 
@@ -41,7 +53,7 @@ public class Transaction {
         return status;
     }
 
-    public LocalDate getDate() {
+    public Date getDate() {
         return date;
     }
 

@@ -21,3 +21,17 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+
+BankApp/src/app/\.DS_Store
+
+\.idea/workspace\.xml
+
+BankApp/out/production/BankApp/app/account/accountSummary\.fxml
+
+BankApp/out/production/BankApp/app/home/home\.fxml
+
+BankApp/out/production/BankApp/app/login/login\.fxml
+
+BankApp/out/production/BankApp/app/transaction/transaction\.fxml
+
+BankApp/out/production/BankApp/app/transfer/transfer\.fxml

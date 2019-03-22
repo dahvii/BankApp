@@ -1,29 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-
-<?import javafx.scene.image.ImageView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-<VBox xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="app.login.LoginController">
+
+<VBox prefHeight="317.0" prefWidth="315.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.login.LoginController">
         <children>
-            <Label  text="Login">
+      <Label text="SwedenBank">
+         <font>
+            <Font size="40.0" />
+         </font>
+      </Label>
+            <Label text="Login">
                 <font>
-                    <Font size="40.0" />
+                    <Font size="24.0" />
                 </font>
             </Label>
-            <Label text="personnummer:"  />
-            <TextField fx:id="socialNoInput"  />
-            <Label  text="lösenord:"  />
-            <PasswordField fx:id="passwordInput"  />
-            <Button fx:id="inloggBtn" onAction="#login" text="Logga in" />
-            <Label  fx:id="errorNoInput" style="visibility: hidden" text="Vänligen fyll i båda fälten" />
-            <Label  fx:id="errorWrongInput" style="visibility: hidden" text="Fel användaruppgifter" />
+            <Label text="personnummer:" />
+            <TextField fx:id="socialNoInput" text="test" />
+            <Label text="lösenord:" />
+            <PasswordField fx:id="passwordInput" text="test" />
+            <Button fx:id="logInBtn" onAction="#login" text="Logga in" />
+            <Label fx:id="errorNoInput" style="visibility: hidden" text="Vänligen fyll i båda fälten" />
+            <Label fx:id="errorWrongInput" style="visibility: hidden" text="Fel användaruppgifter" />
 
         </children>
+   <padding>
+      <Insets left="15.0" right="15.0" top="15.0" />
+   </padding>
 </VBox>

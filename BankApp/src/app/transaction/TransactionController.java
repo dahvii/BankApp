@@ -13,12 +13,11 @@ public class TransactionController {
 
     @FXML
     private void initialize(){
-        System.out.println("initialize transaction");
     }
 
     public void setTransaction(Transaction transaction) {
         message.setText(transaction.getMessage());
-        // etc
-        // etc
+        amount.setText(""+transaction.getAmount());
+        date.setText(""+transaction.getDate());
     }
 }

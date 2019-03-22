@@ -1,19 +1,29 @@
 package app.login;
 
 
+import app.AddToTable;
+import app.Entities.Account;
 import app.Entities.User;
 import app.Main;
 import app.db.DB;
 import app.db.Database;
+import app.db.ObjectMapper;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
 import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class LoginController {
 
@@ -23,27 +33,24 @@ public class LoginController {
     Label errorWrongInput, errorNoInput;
     @FXML
     PasswordField passwordInput;
+    @FXML
+    Button logInBtn;
 
     // Use this in other Controllers to get "the currently logged in user".
     private static User user = null;
     public static User getUser() { return user; }
 
     @FXML
-    private void initialize() {
-        System.out.println("initialize login");
-        loadUser();
+    void initialize(){
+        logInBtn.setDefaultButton(true);
     }
 
-    void loadUser(){
-//        user = DB.getMatchingUser("Kalle", "abc123?");
-        // if null display error
-        // else switchScene to Home
-    }
+
 
     void switchScene(String pathname) {
         try {
-            Parent bla = FXMLLoader.load(getClass().getResource(pathname));
-            Scene scene = new Scene(bla, 800, 600);
+            Parent parent = FXMLLoader.load(getClass().getResource(pathname));
+            Scene scene = new Scene(parent, 800, 800);
             Main.stage.setScene(scene);
             Main.stage.show();
         } catch (IOException e1) {
@@ -66,8 +73,7 @@ public class LoginController {
                 errorWrongInput.setStyle("visibility: visible;");
             }
             else{
-                System.out.println("SUCCESS");
-                switchScene("/app/home/home.fxml");
+                goToHome();
             }
             //socialNoInput.clear();
             //passwordInput.clear();

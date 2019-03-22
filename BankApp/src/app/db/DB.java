@@ -51,13 +51,14 @@ public abstract class DB {
     }
     */
 
-    public static List<?> getTransactions(String bankNr){
-        List<?> result = null;
+
+    public static List<Transaction> getTransactions(String bankNr){
+        List<Transaction> result = null;
         PreparedStatement ps = prep("SELECT * FROM transactions WHERE fromAccount = ? OR toAccount = ? ORDER BY date");
         try {
             ps.setString(1, bankNr);
             ps.setString(2, bankNr);
-            result = new ObjectMapper<>(Transaction.class).map(ps.executeQuery());
+            result = (List<Transaction>)(List<?>)new ObjectMapper<>(Transaction.class).map(ps.executeQuery());
         } catch (Exception e) { e.printStackTrace(); }
         return result; // return User;
     }
@@ -67,7 +68,7 @@ public abstract class DB {
         PreparedStatement ps = prep("SELECT * FROM accounts WHERE user = ?");
         try {
             ps.setString(1, socialNo);
-            //result = (List<Account>)new ObjectMapper<>(Transaction.class).map(ps.executeQuery());
+            result = (List<Account>)(List<?>)new ObjectMapper<>(Transaction.class).map(ps.executeQuery());
         } catch (Exception e) { e.printStackTrace(); }
         return result; // return User;
     }

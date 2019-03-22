@@ -28,10 +28,10 @@ public class HomeController {
 
     @FXML
     void initialize(){
-        userLabel.setText("Inloggad som: "+LoginController.getUser().getName());
+        //userLabel.setText("Inloggad som: "+LoginController.getUser().getName());
 
         // load accounts from db using LoginController.user.getId() and display them
-        printAccounts();
+        //printAccounts();
 
 
     }

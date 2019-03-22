@@ -37,8 +37,6 @@ public class Main extends Application {
 
         //Transact.makeTransaction(transaction);
 
-        System.out.println(Transact.subtractMoney("0022717455", 5000));
-
         launch(args);
     }
 }

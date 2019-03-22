@@ -51,7 +51,7 @@ public abstract class Transact {
     }
 
 
-    public static boolean subtractMoney(String fromAccount, double amount){
+    private static boolean subtractMoney(String fromAccount, double amount){
         double newBalance, balance;
         balance = getBalance(fromAccount);
         newBalance= balance - amount;
@@ -66,6 +66,8 @@ public abstract class Transact {
 
     private static void setNewBalance(double newBalance, String account){
         String sql = "UPDATE accounts SET balance= "+newBalance+" WHERE bankNr = '"+account+"'";
+
+        //DB.updateTable(sql);
         System.out.println(sql);
 
     }

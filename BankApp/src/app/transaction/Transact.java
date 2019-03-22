@@ -1,6 +1,8 @@
 package app.transaction;
 import app.Entities.Transaction;
 import app.db.DB;
+
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -11,21 +13,19 @@ public abstract class Transact {
         if(subtractMoney(transaction.getFromAccount(), transaction.getAmount())) {
             addMoney(transaction.getToAccount(), transaction.getAmount());
 
-            String sql = "INSERT INTO transactions (fromAccount, toAccount, amount, message, status, date) VALUES ('"
-                    + transaction.getFromAccount() + "', '"
-                    + transaction.getToAccount() + "', "
-                    + transaction.getAmount() + ", '"
-                    + transaction.getMessage() + "', '"
-                    + transaction.getStatus() + "', '"
-                    + transaction.getDate()
-                    + "')";
-
-            ResultSet rs = DB.updateTable(sql);
+            PreparedStatement statement = DB.prep("INSERT INTO transactions (fromAccount, toAccount, amount, message, status, date) VALUES (?,?,?,?,?,?)");
             try {
-                Long id = rs.getLong("GENERATED_KEY");
+                statement.setString(1,transaction.getFromAccount() );
+                statement.setString(2,transaction.getToAccount() );
+                statement.setDouble(3,transaction.getAmount() );
+                statement.setString(4,transaction.getMessage() );
+                statement.setString(5,transaction.getStatus() );
+                statement.setDate(6,transaction.getDate() );
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+
+            DB.executeUpdate(statement);
 
         }
     }
@@ -65,11 +65,15 @@ public abstract class Transact {
     }
 
     private static void setNewBalance(double newBalance, String account){
-        String sql = "UPDATE accounts SET balance= "+newBalance+" WHERE bankNr = '"+account+"'";
-
-        //DB.updateTable(sql);
-        System.out.println(sql);
-
+        String sql = "UPDATE accounts SET balance= ? WHERE bankNr = ?";
+        PreparedStatement statement  = DB.prep(sql);
+        try {
+            statement.setDouble(1, newBalance);
+            statement.setString(2, account);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        DB.executeUpdate(statement);
     }
 
 

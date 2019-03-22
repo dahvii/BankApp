@@ -33,24 +33,9 @@ public abstract class DB {
         return result;
     }
 
-    public static ResultSet updateTable(String sql) {
-        return Database.getInstance().updateTable(sql);
+    public static void executeUpdate(PreparedStatement statement) {
+        Database.getInstance().executeUpdate(statement);
     }
-
-    /*
-        Example method with default parameters
-    public static List<Transaction> getTransactions(int accountId){ return getTransactions(accountId, 0, 10); }
-    public static List<Transaction> getTransactions(int accountId, int offset){ return getTransactions(accountId, offset, offset + 10); }
-    public static List<Transaction> getTransactions(int accountId, int offset, int limit){
-        List<Transaction> result = null;
-        PreparedStatement ps = prep("bla bla from transactions WHERE account-id = "+accountId+" OFFSET "+offset+" LIMIT "+limit);
-        try {
-            result = (List<Transaction>)new ObjectMapper<>(Transaction.class).map(ps.executeQuery());
-        } catch (Exception e) { e.printStackTrace(); }
-        return result; // return User;
-    }
-    */
-
 
     public static List<Transaction> getTransactions(String bankNr){
         List<Transaction> result = null;
@@ -73,4 +58,17 @@ public abstract class DB {
         return result; // return User;
     }
 
+  /*
+        Example method with default parameters
+    public static List<Transaction> getTransactions(int accountId){ return getTransactions(accountId, 0, 10); }
+    public static List<Transaction> getTransactions(int accountId, int offset){ return getTransactions(accountId, offset, offset + 10); }
+    public static List<Transaction> getTransactions(int accountId, int offset, int limit){
+        List<Transaction> result = null;
+        PreparedStatement ps = prep("bla bla from transactions WHERE account-id = "+accountId+" OFFSET "+offset+" LIMIT "+limit);
+        try {
+            result = (List<Transaction>)new ObjectMapper<>(Transaction.class).map(ps.executeQuery());
+        } catch (Exception e) { e.printStackTrace(); }
+        return result; // return User;
+    }
+    */
 }

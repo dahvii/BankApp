@@ -4,6 +4,7 @@ import app.db.DB;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +33,10 @@ public class AddToTable {
                 toAccount = (String) socialNo.get(random(400)-1);
             }while (toAccount.equals(fromAccount));
 
+
             sql="INSERT INTO transactions (fromAccount, toAccount) VALUES ('"+fromAccount+"', '"+toAccount+"');";
-            DB.updateTable(sql);
+            PreparedStatement statement = DB.prep(sql);
+            DB.executeUpdate(statement);
 
         }
     }
@@ -58,9 +61,11 @@ public class AddToTable {
             amount = line.substring(0, first);
             message=line.substring(first+1, last);
             date= line.substring(last+1);
-            String sql = "UPDATE transactions SET amount = "+amount+", message='"+message+"', date='"+date+"'  where id ="+i+";";
 
-            DB.updateTable(sql);
+            String sql = "UPDATE transactions SET amount = "+amount+", message='"+message+"', date='"+date+"'  where id ="+i+";";
+            PreparedStatement statement = DB.prep(sql);
+
+            DB.executeUpdate(statement);
             i++;
         }
     }
@@ -79,7 +84,8 @@ public class AddToTable {
                     random= random(4);
                     i++;
                 }
-                DB.updateTable(sql);
+                PreparedStatement statement= DB.prep(sql);
+                DB.executeUpdate(statement);
                 System.out.println(sql);
             }
         } catch (Exception ex) { ex.printStackTrace(); }

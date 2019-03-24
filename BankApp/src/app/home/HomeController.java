@@ -101,12 +101,23 @@ public class HomeController {
         }
     }
 
+    void switchScene(String pathname) {
+        try {
+            Parent parent = FXMLLoader.load(getClass().getResource(pathname));
+            Scene scene = new Scene(parent, 800, 800);
+            Main.stage.setScene(scene);
+            Main.stage.show();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+    }
+
     @FXML
     void goToAccount() throws IOException {
 
         FXMLLoader loader = new FXMLLoader( getClass().getResource( "/app/account/account.fxml" ) );
         Parent fxmlInstance = loader.load();
-        Scene scene = new Scene( fxmlInstance, 800, 600 );
+        Scene scene = new Scene( fxmlInstance, 800, 800 );
 
         // Make sure that you display "the correct account" based on which one you clicked on
 //            AccountController controller = loader.getController();
@@ -119,13 +130,7 @@ public class HomeController {
 
     }
     @FXML
-    void goToTransfer() throws IOException {
-
-        FXMLLoader loader = new FXMLLoader( getClass().getResource( "/app/transfer/transfer.fxml" ) );
-        Parent fxmlInstance = loader.load();
-        Scene scene = new Scene( fxmlInstance, 800, 600 );
-        Main.stage.setScene(scene);
-        Main.stage.show();
-
+    void goToTransfer(){
+        switchScene("/app/transfer/transfer.fxml");
     }
 }

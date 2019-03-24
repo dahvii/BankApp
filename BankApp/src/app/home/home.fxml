@@ -8,35 +8,35 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<ScrollPane fitToHeight="true" minHeight="-Infinity" minWidth="-Infinity" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.home.HomeController">
+<ScrollPane fitToHeight="true" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.home.HomeController">
    <content>
       <VBox>
          <children>
+            <HBox alignment="BASELINE_LEFT" prefHeight="35.0" prefWidth="455.0">
+               <children>
+                  <Label fx:id="userLabel" prefHeight="29.0" prefWidth="188.0" text="Inloggad User" />
+                  <Label alignment="CENTER" graphicTextGap="9.0" prefHeight="46.0" prefWidth="152.0" text="SwedenBank" textOverrun="CENTER_ELLIPSIS">
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <font>
+                        <Font name="Apple Symbols" size="24.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
             <HBox prefHeight="343.0" prefWidth="526.0">
                <children>
-                  <VBox prefHeight="1580.0" prefWidth="265.0">
+                  <VBox fx:id="accountBox" prefHeight="343.0" prefWidth="271.0">
                      <children>
-                        <Label fx:id="userLabel" prefHeight="33.0" prefWidth="210.0" text="Inloggad User" />
-                        <Label graphicTextGap="9.0" prefHeight="46.0" prefWidth="152.0" text="SwedenBank" textOverrun="CENTER_ELLIPSIS" translateX="2.0">
-                           <opaqueInsets>
-                              <Insets />
-                           </opaqueInsets>
+                        <Label prefHeight="36.0" prefWidth="265.0" text="Dina konton:" underline="true">
                            <font>
-                              <Font name="Apple Symbols" size="24.0" />
+                              <Font size="14.0" />
                            </font>
                         </Label>
-                        <VBox fx:id="accountBox" prefHeight="200.0" prefWidth="150.0">
-                           <children>
-                              <Label prefHeight="36.0" prefWidth="265.0" text="Dina konton:" underline="true">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
-                              </Label>
-                           </children>
-                        </VBox>
                      </children>
                   </VBox>
-                  <VBox prefHeight="388.0" prefWidth="265.0">
+                  <VBox prefHeight="343.0" prefWidth="271.0">
                      <children>
                         <Button onAction="#goToTransfer" prefHeight="40.0" prefWidth="257.0" text="Betala och Överföra">
                            <font>

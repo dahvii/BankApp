@@ -9,25 +9,24 @@ import java.sql.SQLException;
 public abstract class Transfer {
 
     public static void makeTransaction(Transaction transaction){
-        //if there is enough money on account, make the transaction
-        if(subtractMoney(transaction.getFromAccount(), transaction.getAmount())) {
-            addMoney(transaction.getToAccount(), transaction.getAmount());
+        subtractMoney(transaction.getFromAccount(), transaction.getAmount());
+        addMoney(transaction.getToAccount(), transaction.getAmount());
 
-            PreparedStatement statement = DB.prep("INSERT INTO transactions (fromAccount, toAccount, amount, message, status, date) VALUES (?,?,?,?,?,?)");
-            try {
-                statement.setString(1,transaction.getFromAccount() );
-                statement.setString(2,transaction.getToAccount() );
-                statement.setDouble(3,transaction.getAmount() );
-                statement.setString(4,transaction.getMessage() );
-                statement.setString(5,transaction.getStatus() );
-                statement.setDate(6,transaction.getDate() );
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-
-            DB.executeUpdate(statement);
-
+        PreparedStatement statement = DB.prep("INSERT INTO transactions (fromAccount, toAccount, amount, message, date) VALUES (?,?,?,?,?)");
+        try {
+            statement.setString(1,transaction.getFromAccount() );
+            statement.setString(2,transaction.getToAccount() );
+            statement.setDouble(3,transaction.getAmount() );
+            statement.setString(4,transaction.getMessage() );
+            statement.setDate(5,transaction.getDate() );
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        DB.executeUpdate(statement);
+    }
+
+    public static void planTransaction(Transaction transaction){
+        
     }
 
     private static double getBalance(String account){
@@ -51,17 +50,11 @@ public abstract class Transfer {
     }
 
 
-    private static boolean subtractMoney(String fromAccount, double amount){
+    private static void subtractMoney(String fromAccount, double amount){
         double newBalance, balance;
         balance = getBalance(fromAccount);
         newBalance= balance - amount;
-
-        if (newBalance >= 0){
-            setNewBalance(newBalance, fromAccount);
-            return true;
-        }else {
-            return false;
-        }
+        setNewBalance(newBalance, fromAccount);
     }
 
     private static void setNewBalance(double newBalance, String account){

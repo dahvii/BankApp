@@ -1,20 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.HBox?>
-
 <?import javafx.scene.layout.VBox?>
-<VBox xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.transaction.TransferController">
+<?import javafx.scene.text.Font?>
+
+<VBox prefHeight="381.0" prefWidth="455.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.transfer.TransferController">
    <children>
-      <BorderPane />
-      <HBox spacing="60.0">
+      <HBox alignment="BASELINE_CENTER" prefHeight="35.0" prefWidth="455.0">
          <children>
-            <Label fx:id="message" text="Message" />
-            <Label fx:id="date" text="Date" />
-            <Label fx:id="amount" text="Amount" />
+            <Label fx:id="userLabel" prefHeight="29.0" prefWidth="188.0" text="Inloggad User" />
+            <Label alignment="CENTER" graphicTextGap="9.0" prefHeight="46.0" prefWidth="152.0" text="SwedenBank" textOverrun="CENTER_ELLIPSIS">
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <font>
+                  <Font name="Apple Symbols" size="24.0" />
+               </font>
+            </Label>
+            <Button alignment="CENTER" mnemonicParsing="false" onAction="#goToHome" prefHeight="27.0" prefWidth="164.0" text="tillbaka till startsidan">
+               <HBox.margin>
+                  <Insets top="5.0" />
+               </HBox.margin>
+            </Button>
          </children>
       </HBox>
+      <VBox prefHeight="77.0" prefWidth="455.0">
+         <children>
+            <Label text="Från konto: " />
+            <ComboBox fx:id="fromAccount" prefHeight="27.0" />
+         </children>
+      </VBox>
+      <HBox layoutX="10.0" layoutY="45.0" prefHeight="25.0" prefWidth="455.0">
+         <children>
+            <Label text="Till konto: " />
+            <RadioButton mnemonicParsing="false" onAction="#radioBtnFromOwnAccounts" selected="true" text="Eget konto">
+               <toggleGroup>
+                  <ToggleGroup fx:id="radioBtnGroup" />
+               </toggleGroup>
+            </RadioButton>
+            <RadioButton mnemonicParsing="false" onAction="#radioBtnWriteInAccount" text="Skriv in konotnummer" toggleGroup="$radioBtnGroup" />
+         </children>
+      </HBox>
+      <HBox fx:id="toAccountBox" prefHeight="100.0" prefWidth="200.0" />
+      <DatePicker fx:id="datePicker" />
+      <Label text="summa:" />
+      <TextField fx:id="amountInput" />
+      <Label text="meddelande:" />
+      <TextField fx:id="messageInput" />
+      <Button mnemonicParsing="false" onAction="#submit" text="Gör transaktion" />
+      <Label fx:id="messageLbl" prefHeight="96.0" prefWidth="500.0" text="errors" />
    </children>
+   <padding>
+      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+   </padding>
 </VBox>

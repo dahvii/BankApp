@@ -34,4 +34,7 @@ public class Account {
 
     public double getBalance() { return balance; }
 
+     @Override
+     public String toString(){
+        return String.format("Account:bankNr: %s ", bankNr );   }
 }

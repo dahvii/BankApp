@@ -15,6 +15,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import jdk.jfr.DataAmount;
 
@@ -29,13 +30,14 @@ public class HomeController {
     @FXML
     Label userLabel;
     @FXML
-    VBox leftContent, accountBox, transactionBox;
+    VBox accountBox, transactionBox;
 
     @FXML
     void initialize(){
         userLabel.setText("Inloggad som: "+LoginController.getUser().getName());
         displayAccounts();
         displayTransactionsSummary(LoginController.getUser().getSocialNo());
+        //displayMyOwnTransactions(LoginController.getUser().getSocialNo());
     }
 
     void displayAccounts(){
@@ -48,32 +50,34 @@ public class HomeController {
 
     void displayAccount(Account account){
         // For every account, do the following:
+        HBox accountContent = new HBox();
         Button accountBtn = new Button();
+        Label balance = new Label();
 
+
+        balance.setText("saldo: "+account.getBalance());
         if(account.getName() == null){
             accountBtn.setText(account.getBankNr());
         }else {
             accountBtn.setText(account.getName());
         }
 
-        accountBox.getChildren().add(accountBtn);
+        accountContent.getChildren().addAll(accountBtn, balance);
+        accountBox.getChildren().add(accountContent);
 
-        /*try {
-            FXMLLoader loader = new FXMLLoader( getClass().getResource( "/app/account/accountSummary.fxml" ) );
-            Parent fxmlInstance = loader.load();
-            Scene scene = new Scene( fxmlInstance );
-
-            AccountSummaryController controller = loader.getController();
-            controller.setAccount(account);
-
-            leftContent.getChildren().add(scene.getRoot());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
     }
 
     void displayTransactionsSummary(String socialNo){
         List<Transaction> transactions = DB.getUserTransactions(socialNo, 0, 5);
+
+        for (Transaction transaction: transactions){
+            displayTransaction(transaction);
+        }
+    }
+
+    //for testing
+    void displayMyOwnTransactions(String socialNo){
+        List<Transaction> transactions = DB.getTransactionsBetweenOwnAccounts(socialNo);
 
         for (Transaction transaction: transactions){
             displayTransaction(transaction);
@@ -88,7 +92,8 @@ public class HomeController {
             Scene scene = new Scene( fxmlInstance );
 
             TransactionController controller = loader.getController();
-            controller.setTransaction(transaction);
+
+            controller.setTransaction(transaction, DB.getAccounts(LoginController.getUser().getSocialNo()) );
 
             transactionBox.getChildren().add(scene.getRoot());
         } catch (IOException e) {

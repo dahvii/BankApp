@@ -22,7 +22,7 @@ import java.util.List;
 public class TransferController {
 
     @FXML
-    Label userLabel, messageLbl;
+    Label userLbl, messageLbl;
     @FXML
     HBox toAccountBox;
     @FXML
@@ -38,7 +38,7 @@ public class TransferController {
 
     @FXML
     private void initialize(){
-        userLabel.setText("Inloggad som: "+ LoginController.getUser().getName());
+        userLbl.setText("Inloggad som: "+ LoginController.getUser().getName());
         displayAccountChoice(fromAccount);
         radioBtnFromOwnAccounts();
         messageLbl.setVisible(false);
@@ -110,7 +110,7 @@ public class TransferController {
         }
         try {
             amount= Double.parseDouble(amountInput.getText());
-            if(amount >= getAccountInput(fromAccount).getBalance()){
+            if(amount > getAccountInput(fromAccount).getBalance()){
                 errorMessage+="För lite pengar på kontot för vald summa\n";
                 validate=false;
             }

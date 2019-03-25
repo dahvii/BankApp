@@ -3,7 +3,7 @@ package app.db;
 import app.Entities.Account;
 import app.Entities.Transaction;
 import app.Entities.User;
-import app.accountFunctions.AccountFunctionWindow;
+import app.accountFunctions.AccountFunction;
 import app.home.HomeController;
 import app.login.LoginController;
 
@@ -107,12 +107,10 @@ public abstract class DB {
     public static void makeSalaryTransaction(Account account){
         //finns det redan en lön registrerad?
         if(alreadyPlannedSalaryTransactions(account.getBankNr())){
-            AccountFunctionWindow.displayConfirmBox("Det finns redan en lön registrerad, vad sägs som att du väntar till nästa månad med att få mer lön?");
+            AccountFunction.displayConfirmBox("Det finns redan en lön registrerad, vad sägs som att du väntar till nästa månad med att få mer lön?");
         }else {
-            AccountFunctionWindow.displayConfirmBox("Lönetransaktion registrerad");
             LocalDate date = LocalDate.now().withDayOfMonth(25);
             Date sqlDate = Date.valueOf(date);
-
             Transaction transaction = new Transaction(
                     null,
                     account.getBankNr(),
@@ -121,6 +119,7 @@ public abstract class DB {
                     sqlDate
             );
             planTransaction(transaction);
+            AccountFunction.displayConfirmBox("Lönetransaktion registrerad");
         }
     }
 
@@ -136,17 +135,18 @@ public abstract class DB {
                 sqlDate
         );
         makeTransaction(transaction);
-        AccountFunctionWindow.displayConfirmBox("Kortbetalning registrerad");
+        AccountFunction.displayConfirmBox("Kortbetalning registrerad");
     }
 
-    public static void setAccountFunction(Account account, String function){
-        PreparedStatement ps = prep("UPDATE accounts SET function= ? WHERE bankNr = ?");
+    public static void upDateAccount(Account account, String column, String value){
+        PreparedStatement ps = prep("UPDATE accounts SET "+column+" = ? WHERE bankNr = ?;");
         try {
-            ps.setString(1, function);
+            ps.setString(1, value);
             ps.setString(2, account.getBankNr());
+
         } catch (Exception e) { e.printStackTrace(); }
         DB.executeUpdate(ps);
-
+        AccountFunction.displayConfirmBox("Konto uppdaterat");
     }
 
     public static void makeTransaction(Transaction transaction){
@@ -169,6 +169,7 @@ public abstract class DB {
             //System.out.println("statment redo datum är "+transaction.getDate());
             //System.out.println(statement);
             executeUpdate(statement);
+            AccountFunction.displayConfirmBox("Transaktion genomförd");
 
         }else{
             HomeController.addBankMessage("Nedan planerad överföring kunde inte genomföras\n"+
@@ -202,7 +203,6 @@ public abstract class DB {
         }
         executeUpdate(statement);
     }
-
 
     private static double getBalance(String account){
         double balance;
@@ -270,6 +270,44 @@ public abstract class DB {
         return null;
     }
 
+    public static void addAccount(String name, String function){
+        PreparedStatement statement = prep("INSERT INTO accounts VALUES (?,?,?,?,?)");
+        try {
+            statement.setString(1, generateBankNr());
+            statement.setString(2, name );
+            statement.setString(3, function);
+            statement.setString(4, LoginController.getUser().getSocialNo() );
+            statement.setDouble(5,0 );
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        executeUpdate(statement);
+        AccountFunction.displayConfirmBox("Konto tillagt");
+    }
+
+    public static void deleteAccount(String bankNr){
+        PreparedStatement statement = prep("DELETE FROM accounts WHERE bankNr= ?;");
+        try {
+            statement.setString(1, bankNr );
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        executeUpdate(statement);
+        AccountFunction.displayConfirmBox("Konto borttaget");
+
+    }
+
+    private static String generateBankNr(){
+        String bankNr;
+        do {
+            bankNr="";
+            for(int i = 0; i < 10; i++ ){
+                bankNr+= (int)Math.ceil(Math.random() * 9);
+            }
+        }while (getAccount(bankNr) != null);
+        return bankNr;
+    }
 
   /*
         Example method with default parameters

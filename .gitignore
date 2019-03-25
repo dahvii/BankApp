@@ -35,3 +35,5 @@ BankApp/out/production/BankApp/app/login/login\.fxml
 BankApp/out/production/BankApp/app/transaction/transaction\.fxml
 
 BankApp/out/production/BankApp/app/transfer/transfer\.fxml
+
+BankApp/out/production/BankApp/app/account/account\.fxml

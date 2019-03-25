@@ -4,7 +4,7 @@ import app.Entities.Account;
 import app.Entities.Transaction;
 import app.Main;
 import app.account.AccountController;
-import app.accountFunctions.AccountFunctionWindow;
+import app.accountFunctions.AccountFunction;
 import app.db.DB;
 import app.login.LoginController;
 import app.transaction.TransactionController;
@@ -23,7 +23,7 @@ import java.util.List;
 public class HomeController {
 
     @FXML
-    Label userLabel;
+    Label userLbl;
     @FXML
     Label  bankMessage;
     @FXML
@@ -34,10 +34,9 @@ public class HomeController {
     @FXML
     void initialize(){
         bankMessage.setText(messageFromBank);
-        userLabel.setText("Inloggad som: "+LoginController.getUser().getName());
+        userLbl.setText("Inloggad som: "+LoginController.getUser().getName());
         displayAccounts();
         displayTransactionsSummary(LoginController.getUser().getSocialNo());
-        //displayMyOwnTransactions(LoginController.getUser().getSocialNo());
     }
 
     void displayAccounts(){
@@ -111,8 +110,25 @@ public class HomeController {
     }
 
     @FXML
+    void addAccount(){
+        AccountFunction.displayAddAccountBox();
+        reload();
+    }
+
+    @FXML
+    void renameAccount(){
+        AccountFunction.displayRenameAccountBox();
+        reload();
+    }
+
+    @FXML
+    void deleteAccount(){
+        AccountFunction.displayDeleteAccountBox();
+        reload();
+    }
+    @FXML
     void chooseFunction(){
-        AccountFunctionWindow.displayAccountFunctions();
+        AccountFunction.displayAccountFunctions();
 
     }
 
@@ -120,14 +136,14 @@ public class HomeController {
     void cardPayment(){
         Account account = DB.accountHasFunction("Kortkonto");
         if(account != null){
-            double amount = AccountFunctionWindow.displayAmountBox();
+            double amount = AccountFunction.displayAmountBox();
             if (amount > 0) {
                 DB.makeCardTransaction(account, amount);
             }
         }else{
-            AccountFunctionWindow.displayConfirmBox("Du måste registrera ett kortkonto innan du försöker göra ett kortköp!");
+            AccountFunction.displayConfirmBox("Du måste registrera ett kortkonto innan du försöker göra ett kortköp!");
         }
-
+        reload();
     }
 
     @FXML
@@ -136,7 +152,7 @@ public class HomeController {
         if(account != null){
             DB.makeSalaryTransaction(account);
         }else{
-            AccountFunctionWindow.displayConfirmBox("Du måste registrera ett lönekonto innan du försöker få en lönetransaktion!");
+            AccountFunction.displayConfirmBox("Du måste registrera ett lönekonto innan du försöker få en lönetransaktion!");
         }
     }
 
@@ -165,5 +181,12 @@ public class HomeController {
     @FXML
     void goToTransfer(){
         switchScene("/app/transfer/transfer.fxml");
+    }
+
+    void reload(){
+        accountBox.getChildren().clear();
+        transactionBox.getChildren().clear();
+        displayAccounts();
+        displayTransactionsSummary(LoginController.getUser().getSocialNo());
     }
 }

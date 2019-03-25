@@ -29,6 +29,16 @@ public abstract class DB {
         return result; // return User;
     }
 
+    public static Account getAccount(String bankNr){
+        Account account = null;
+        PreparedStatement ps = prep("SELECT * FROM accounts WHERE bankNr = ?");
+        try {
+            ps.setString(1, bankNr);
+            account = (Account) new ObjectMapper<>(Account.class).mapOne(ps.executeQuery());
+        } catch (Exception e) { e.printStackTrace(); }
+        return account;
+    }
+
     public static ResultSet executeQuery(String SQLQuery){
         ResultSet result = Database.getInstance().executeQuery(prep(SQLQuery));
         return result;

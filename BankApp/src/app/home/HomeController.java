@@ -4,12 +4,11 @@ import app.Entities.Account;
 import app.Entities.Transaction;
 import app.Main;
 import app.account.AccountController;
-import app.account.AccountSummaryController;
 import app.accountFunctions.AccountFunctionWindow;
 import app.db.DB;
-import app.db.Database;
 import app.login.LoginController;
 import app.transaction.TransactionController;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -18,12 +17,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import jdk.jfr.DataAmount;
-
-import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class HomeController {
@@ -57,16 +51,19 @@ public class HomeController {
     void displayAccount(Account account){
         // For every account, do the following:
         HBox accountContent = new HBox();
+
         Button accountBtn = new Button();
-        Label balance = new Label();
-
-
-        balance.setText("saldo: "+account.getBalance());
+        accountBtn.setId(account.getBankNr());
+        accountBtn.setOnAction(e -> goToAccount(e));
         if(account.getName() == null){
             accountBtn.setText(account.getBankNr());
         }else {
-            accountBtn.setText(account.getName());
+            accountBtn.setText(account.getName()+"\n"+account.getBankNr());
         }
+
+        Label balance = new Label();
+        balance.setText("saldo: "+account.getBalance());
+
 
         accountContent.getChildren().addAll(accountBtn, balance);
         accountBox.getChildren().add(accountContent);
@@ -144,18 +141,23 @@ public class HomeController {
     }
 
     @FXML
-    void goToAccount() throws IOException {
+    void goToAccount(ActionEvent event)  {
+
+        Button clicked = (Button)event.getSource();
+        Account account = DB.getAccount(clicked.getId());
 
         FXMLLoader loader = new FXMLLoader( getClass().getResource( "/app/account/account.fxml" ) );
-        Parent fxmlInstance = loader.load();
+        Parent fxmlInstance = null;
+        try {
+            fxmlInstance = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         Scene scene = new Scene( fxmlInstance, 800, 800 );
 
-        // Make sure that you display "the correct account" based on which one you clicked on
-//            AccountController controller = loader.getController();
-//            controller.setAccount(accountFromDB);
 
-        // If you don't want to have/use the static variable Main.stage
-//        Stage window = (Stage)((Node)e.getSource()).getScene().getWindow();
+        AccountController controller = loader.getController();
+        controller.setAccount(account);
         Main.stage.setScene(scene);
         Main.stage.show();
 

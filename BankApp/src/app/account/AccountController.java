@@ -22,13 +22,14 @@ public class AccountController {
     @FXML
     VBox transactionBox;
     @FXML
-    Label accountLbl, message;
+    Label accountLbl, message, userLbl;
 
 
     Account account = null;
     int offset;
 
     public void setAccount(Account account){
+        userLbl.setText("Inloggad som: "+LoginController.getUser().getName());
         message.setVisible(false);
         offset = 0;
         this.account= account;

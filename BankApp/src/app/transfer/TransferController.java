@@ -50,11 +50,16 @@ public class TransferController {
         List<Account> accounts = DB.getAccounts(LoginController.getUser().getSocialNo());
         comboBox.setPromptText("Välj konto");
         for(Account account: accounts){
+            String accountInfo="";
             if (account.getName() != null){
-                comboBox.getItems().add(account.getName()+"\tsaldo: "+account.getBalance()+"\n"+account.getBankNr());
-            }else {
-                comboBox.getItems().add(account.getBankNr()+"\tsaldo: "+account.getBalance());
+                accountInfo+=account.getName()+"\n";
             }
+            if(account.getFunction() != null){
+                accountInfo+=account.getFunction()+"\n";
+            }
+            accountInfo+= account.getBankNr()+"\tsaldo: "+account.getBalance();
+            comboBox.getItems().add(accountInfo);
+
         }
     }
 
@@ -79,9 +84,9 @@ public class TransferController {
         );
 
         if(date.isAfter(LocalDate.now())){
-            Transfer.planTransaction(transaction);
+            DB.planTransaction(transaction);
         }else {
-            Transfer.makeTransaction(transaction);
+            DB.makeTransaction(transaction);
         }
     }
 

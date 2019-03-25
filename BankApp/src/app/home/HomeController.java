@@ -5,6 +5,7 @@ import app.Entities.Transaction;
 import app.Main;
 import app.account.AccountController;
 import app.account.AccountSummaryController;
+import app.accountFunctions.AccountFunctionWindow;
 import app.db.DB;
 import app.db.Database;
 import app.login.LoginController;
@@ -80,15 +81,6 @@ public class HomeController {
         }
     }
 
-    //for testing
-    void displayMyOwnTransactions(String socialNo){
-        List<Transaction> transactions = DB.getTransactionsBetweenOwnAccounts(socialNo);
-
-        for (Transaction transaction: transactions){
-            displayTransaction(transaction);
-        }
-    }
-
     void displayTransaction(Transaction transaction){
         // For every transaction, do the following:
         try {
@@ -123,7 +115,32 @@ public class HomeController {
 
     @FXML
     void chooseFunction(){
+        AccountFunctionWindow.displayAccountFunctions();
 
+    }
+
+    @FXML
+    void cardPayment(){
+        Account account = DB.accountHasFunction("Kortkonto");
+        if(account != null){
+            double amount = AccountFunctionWindow.displayAmountBox();
+            if (amount > 0) {
+                DB.makeCardTransaction(account, amount);
+            }
+        }else{
+            AccountFunctionWindow.displayConfirmBox("Du måste registrera ett kortkonto innan du försöker göra ett kortköp!");
+        }
+
+    }
+
+    @FXML
+    void planSalary(){
+        Account account = DB.accountHasFunction("Lönekonto");
+        if(account != null){
+            DB.makeSalaryTransaction(account);
+        }else{
+            AccountFunctionWindow.displayConfirmBox("Du måste registrera ett lönekonto innan du försöker få en lönetransaktion!");
+        }
     }
 
     @FXML

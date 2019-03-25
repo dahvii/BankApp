@@ -79,9 +79,9 @@ public class TransferController {
         );
 
         if(date.isAfter(LocalDate.now())){
-            Transfer.planTransaction(transaction);
+            DB.planTransaction(transaction);
         }else {
-            Transfer.makeTransaction(transaction);
+            DB.makeTransaction(transaction);
         }
     }
 

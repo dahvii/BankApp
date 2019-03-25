@@ -8,8 +8,8 @@ public class Account {
     private String bankNr;
     @Column("name")
     private String name;
-    @Column("usage")
-    private String usage;
+    @Column("function")
+    private String function;
     @Column("user")
     private String user;
     @Column("balance")
@@ -24,8 +24,8 @@ public class Account {
         return name;
     }
 
-    public String getUsage() {
-        return usage;
+    public String getFunction() {
+        return function;
     }
 
     public String getUser() {

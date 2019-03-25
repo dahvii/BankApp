@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -15,6 +16,8 @@ import javafx.stage.Stage;
 import java.util.List;
 
 public class AccountFunctionWindow {
+
+    static double amount;
 
 
     private static void display(String title, String message1, String message2){
@@ -70,6 +73,36 @@ public class AccountFunctionWindow {
         window.showAndWait();
     }
 
+    public static double displayAmountBox(){
+        Stage window = new Stage();
+        window.initModality(Modality.APPLICATION_MODAL);
+        window.setTitle("Bank app");
+        window.setMinWidth(250);
+
+        Label label = new Label("Fyll i summan för kortköpet");
+        TextField input = new TextField();
+
+        Button okBtn = new Button("Ok");
+
+        okBtn.setOnAction(event -> {
+            try {
+                amount = Double.parseDouble(input.getText());
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
+            window.close();
+        });
+
+        VBox layout = new VBox(10);
+        layout.getChildren().addAll(label, input, okBtn);
+        layout.setAlignment(Pos.CENTER);
+
+        Scene scene = new Scene(layout);
+        window.setScene(scene);
+        window.showAndWait();
+        return amount;
+    }
+
     public static void displayAccountFunctions(){
         Stage window = new Stage();
         window.initModality(Modality.APPLICATION_MODAL);
@@ -111,13 +144,17 @@ public class AccountFunctionWindow {
         List<Account> accounts = DB.getAccounts(LoginController.getUser().getSocialNo());
         comboBox.setPromptText("Välj konto");
         for(Account account: accounts){
+            String accountInfo="";
             if (account.getName() != null){
-                comboBox.getItems().add(account.getName()+"\tsaldo: "+account.getBalance()+"\n"+account.getBankNr());
-            }else {
-                comboBox.getItems().add(account.getBankNr()+"\tsaldo: "+account.getBalance());
+                accountInfo+=account.getName()+"\n";
             }
-        }
+            if(account.getFunction() != null){
+                accountInfo+=account.getFunction()+"\n";
+            }
+            accountInfo+= account.getBankNr()+"\tsaldo: "+account.getBalance();
+            comboBox.getItems().add(accountInfo);
 
+        }
         return comboBox;
     }
 
@@ -130,6 +167,7 @@ public class AccountFunctionWindow {
 
         return comboBox;
     }
+
 
     private static Account getAccountInput(ComboBox<String> comboBox){
         if(comboBox.getValue() == null){

@@ -76,7 +76,7 @@
                            </font>
                         </Label>
                         <Button layoutX="10.0" layoutY="138.0" onAction="#planSalary" prefHeight="27.0" text="Få en planerad löneinsätning" />
-                        <Button layoutX="10.0" layoutY="175.0" prefHeight="27.0" text="Gör ett kortköp " />
+                        <Button layoutX="10.0" layoutY="175.0" onAction="#cardPayment" prefHeight="27.0" text="Gör ett kortköp " />
                         <Label layoutX="10.0" layoutY="100.0" prefHeight="33.0" prefWidth="127.0" text="Meddelanden" underline="true">
                            <font>
                               <Font name="System Bold" size="14.0" />

@@ -120,18 +120,25 @@ public class HomeController {
     }
 
     @FXML
-    void planSalary(){
-        List<Account> accounts = DB.getAccounts(LoginController.getUser().getSocialNo());
-
-        boolean hasSalaryAccount=false;
-        for(Account account: accounts){
-            if(account.getFunction() != null && account.getFunction().equals("Lönekonto")){
-                DB.makeSalaryTransaction(account);
-                hasSalaryAccount=true;
+    void cardPayment(){
+        Account account = DB.accountHasFunction("Kortkonto");
+        if(account != null){
+            double amount = AccountFunctionWindow.displayAmountBox();
+            if (amount > 0) {
+                DB.makeCardTransaction(account, amount);
             }
+        }else{
+            AccountFunctionWindow.displayConfirmBox("Du måste registrera ett kortkonto innan du försöker göra ett kortköp!");
         }
 
-        if(!hasSalaryAccount){
+    }
+
+    @FXML
+    void planSalary(){
+        Account account = DB.accountHasFunction("Lönekonto");
+        if(account != null){
+            DB.makeSalaryTransaction(account);
+        }else{
             AccountFunctionWindow.displayConfirmBox("Du måste registrera ett lönekonto innan du försöker få en lönetransaktion!");
         }
     }

@@ -5,6 +5,7 @@ import app.Entities.Transaction;
 import app.Entities.User;
 import app.accountFunctions.AccountFunctionWindow;
 import app.home.HomeController;
+import app.login.LoginController;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -113,6 +114,21 @@ public abstract class DB {
         }
     }
 
+    public static void makeCardTransaction(Account account, double amount){
+        LocalDate date = LocalDate.now();
+        Date sqlDate = Date.valueOf(date);
+
+        Transaction transaction = new Transaction(
+                account.getBankNr(),
+                null,
+                amount,
+                "Kortbetalning",
+                sqlDate
+        );
+        makeTransaction(transaction);
+        AccountFunctionWindow.displayConfirmBox("Kortbetalning registrerad");
+    }
+
     public static void setAccountFunction(Account account, String function){
         PreparedStatement ps = prep("UPDATE accounts SET function= ? WHERE bankNr = ?");
         try {
@@ -121,18 +137,6 @@ public abstract class DB {
         } catch (Exception e) { e.printStackTrace(); }
         DB.executeUpdate(ps);
 
-        switch(function) {
-            case "Lönekonto":
-                makeSalaryTransaction(account);
-                break;
-            case "Sparkonto":
-                // code block
-                break;
-           case "Kortkonto":
-            // code block
-            break;
-        }
-
     }
 
     public static void makeTransaction(Transaction transaction){
@@ -140,6 +144,7 @@ public abstract class DB {
         if(subtractMoney(transaction.getFromAccount(), transaction.getAmount())) {
             addMoney(transaction.getToAccount(), transaction.getAmount());
 
+            //System.out.println("redo att göra transaktion datum är "+transaction.getDate());
             PreparedStatement statement = prep("INSERT INTO transactions (fromAccount, toAccount, amount, message, date) VALUES (?,?,?,?,?)");
             try {
                 statement.setString(1,transaction.getFromAccount() );
@@ -150,6 +155,9 @@ public abstract class DB {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+
+            //System.out.println("statment redo datum är "+transaction.getDate());
+            //System.out.println(statement);
             executeUpdate(statement);
 
         }else{
@@ -200,10 +208,15 @@ public abstract class DB {
     }
 
     private static void addMoney(String toAccount, double amount){
-        double newBalance, balance;
-        balance = getBalance(toAccount);
-        newBalance= balance + amount;
-        setNewBalance(newBalance, toAccount);
+        //tillåt toAccount att vara null så vi kan göra ex kortköp då de inte skickas nånstans
+        if (toAccount == null){
+            return;
+        }else {
+            double newBalance, balance;
+            balance = getBalance(toAccount);
+            newBalance = balance + amount;
+            setNewBalance(newBalance, toAccount);
+        }
     }
 
     private static boolean subtractMoney(String fromAccount, double amount){
@@ -236,6 +249,16 @@ public abstract class DB {
         executeUpdate(statement);
     }
 
+    public static Account accountHasFunction(String function){
+        List<Account> accounts = DB.getAccounts(LoginController.getUser().getSocialNo());
+
+        for(Account account: accounts){
+            if(account.getFunction() != null && account.getFunction().equals(function)){
+                return account;
+            }
+        }
+        return null;
+    }
 
 
   /*

@@ -1,6 +1,7 @@
 package app.transfer;
 import app.Entities.Transaction;
 import app.db.DB;
+import app.home.HomeController;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,22 +14,51 @@ public abstract class Transfer {
         if(subtractMoney(transaction.getFromAccount(), transaction.getAmount())) {
             addMoney(transaction.getToAccount(), transaction.getAmount());
 
-            PreparedStatement statement = DB.prep("INSERT INTO transactions (fromAccount, toAccount, amount, message, status, date) VALUES (?,?,?,?,?,?)");
+            PreparedStatement statement = DB.prep("INSERT INTO transactions (fromAccount, toAccount, amount, message, date) VALUES (?,?,?,?,?)");
             try {
                 statement.setString(1,transaction.getFromAccount() );
                 statement.setString(2,transaction.getToAccount() );
                 statement.setDouble(3,transaction.getAmount() );
                 statement.setString(4,transaction.getMessage() );
-                statement.setString(5,transaction.getStatus() );
-                statement.setDate(6,transaction.getDate() );
+                statement.setDate(5,transaction.getDate() );
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-
             DB.executeUpdate(statement);
 
+        }else{
+            HomeController.addBankMessage("Nedan planerad överföring kunde inte genomföras\n"+
+                    transaction
+                    );
         }
     }
+
+    public static void planTransaction(Transaction transaction){
+        PreparedStatement statement = DB.prep("INSERT INTO plannedTransactions (fromAccount, toAccount, amount, message, date) VALUES (?,?,?,?,?)");
+        try {
+            statement.setString(1,transaction.getFromAccount() );
+            statement.setString(2,transaction.getToAccount() );
+            statement.setDouble(3,transaction.getAmount() );
+            statement.setString(4,transaction.getMessage() );
+            statement.setDate(5,transaction.getDate() );
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        DB.executeUpdate(statement);
+
+    }
+
+    public static void deletePlannedTransaction(Transaction transaction){
+        PreparedStatement statement = DB.prep("DELETE FROM plannedTransactions WHERE id= ?");
+        try {
+            statement.setLong(1,transaction.getID() );
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        DB.executeUpdate(statement);
+    }
+
 
     private static double getBalance(String account){
         double balance;
@@ -49,7 +79,6 @@ public abstract class Transfer {
         newBalance= balance + amount;
         setNewBalance(newBalance, toAccount);
     }
-
 
     private static boolean subtractMoney(String fromAccount, double amount){
         double newBalance, balance;

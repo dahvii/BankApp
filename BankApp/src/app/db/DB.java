@@ -69,6 +69,22 @@ public abstract class DB {
         return result;
     }
 
+
+    //for testing
+    public static List<Transaction> getTransactionsBetweenOwnAccounts(String socialNo){
+        List<Transaction> result = null;
+        PreparedStatement ps = prep("SELECT * FROM transactions WHERE fromAccount IN " +
+                "(SELECT bankNr from accounts WHERE user = ?) " +
+                "AND toAccount IN (SELECT bankNr from accounts WHERE user = ?)" +
+                " ORDER BY date DESC;");
+        try {
+            ps.setString(1, socialNo);
+            ps.setString(2, socialNo);
+            result = (List<Transaction>)(List<?>)new ObjectMapper<>(Transaction.class).map(ps.executeQuery());
+        } catch (Exception e) { e.printStackTrace(); }
+        return result;
+    }
+
     public static List<Account> getAccounts(String socialNo){
         List<Account> result = null;
         PreparedStatement ps = prep("SELECT * FROM accounts WHERE user = ?");

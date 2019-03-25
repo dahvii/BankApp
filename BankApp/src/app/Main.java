@@ -26,15 +26,6 @@ public class Main extends Application {
 
 
     public static void main(String[] args) throws ParseException {
-
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        java.util.Date date= format.parse ( "2009-12-31" );
-        java.sql.Date sqlDate=new java.sql.Date(date.getTime());
-
-        Transaction transaction = new Transaction("0063527510", "0024480606", 4000, "hyra", null, sqlDate);
-
-        //Transfer.makeTransaction(transaction);
-
         launch(args);
     }
 }

@@ -17,19 +17,16 @@ public class Transaction {
     private double amount;
     @Column ("message")
     private String message;
-    @Column("status")
-    private String status;
     @Column("date")
     private Date date;
 
     public Transaction(){}
 
-    public Transaction(String fromAccount, String toAccount, double amount, String message, String status, Date date) {
+    public Transaction(String fromAccount, String toAccount, double amount, String message, Date date) {
         this.fromAccount = fromAccount;
         this.toAccount = toAccount;
         this.amount = amount;
         this.message = message;
-        this.status = status;
         this.date = date;
     }
 
@@ -49,12 +46,20 @@ public class Transaction {
         return message;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
     public Date getDate() {
         return date;
+    }
+
+    public long getID() {
+        return id;
+    }
+
+
+    @Override
+    public String toString(){
+        return "Transaktion: {från konto : "+ fromAccount+
+                "\n till konto: "+toAccount+" summa: "+amount+
+                " \nmeddelande: "+message+" datum:"+date+"}";
     }
 
 }

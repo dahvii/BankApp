@@ -15,10 +15,6 @@ public class Account {
     @Column("balance")
     private double balance;
 
-    public String getUser() {
-        return user;
-    }
-
 
     public String getBankNr() {
         return bankNr;
@@ -32,5 +28,13 @@ public class Account {
         return usage;
     }
 
+    public String getUser() {
+        return user;
+    }
 
+    public double getBalance() { return balance; }
+
+     @Override
+     public String toString(){
+        return String.format("Account:bankNr: %s ", bankNr );   }
 }

@@ -1,15 +1,25 @@
 package app.db;
 
+import app.Entities.Transaction;
+import app.transfer.Transfer;
+
 import java.sql.*;
 import java.util.HashMap;
+import java.util.List;
 
 public class Database {
     private static Database ourInstance = new Database();
     public static Database getInstance() {
         return ourInstance;
     }
-    private Database() { connectToDb(); }
 
+    private Database() {
+        connectToDb();
+
+        Thread checker = new Thread(this::checkForPlannedTransactions, "checker");
+        checker.setDaemon(true);
+        checker.start();
+    }
 
     final String connectionURL = "jdbc:mysql://localhost/bankApp?user=root&password=hej&serverTimezone=UTC ";
     private Connection conn = null;
@@ -47,6 +57,33 @@ public class Database {
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void checkForPlannedTransactions(){
+        List<Transaction> plannedTransactions  = null;
+        PreparedStatement statement = prepareStatement("SELECT * FROM plannedTransactions WHERE date <= CURDATE();");
+
+        while(true){
+            try {
+                plannedTransactions = (List<Transaction>)(List<?>)new ObjectMapper<>(Transaction.class).map(statement.executeQuery());
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            if (plannedTransactions != null){
+                for (Transaction transaction: plannedTransactions){
+                    Transfer.makeTransaction(transaction);
+                    Transfer.deletePlannedTransaction(transaction);
+                    System.out.println(transaction);
+                }
+            }
+
+            try {
+                Thread.sleep(600000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

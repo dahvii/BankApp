@@ -7,11 +7,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="50.0" prefWidth="240.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.transaction.TransactionController">
+<AnchorPane prefHeight="50.0" prefWidth="760.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.transaction.TransactionController">
    <children>
-      <HBox prefWidth="495.0" spacing="60.0">
+      <HBox prefHeight="47.0" prefWidth="760.0" spacing="10.0">
          <children>
-         <VBox>
+         <VBox prefHeight="44.0" prefWidth="117.0">
             <children>
                <Label fx:id="message" prefHeight="29.0" prefWidth="132.0" text="Message">
                   <font>
@@ -24,10 +24,19 @@
             </children>
          </VBox>
 
-            <Label fx:id="amount" text="Amount">
+            <Label fx:id="betweenOwnAccountsLbl" prefHeight="42.0" prefWidth="96.0" text="Överföring mellan egna konton" wrapText="true">
                <HBox.margin>
                   <Insets top="5.0" />
+               </HBox.margin>
+               <font>
+                  <Font size="11.0" />
+               </font></Label>
+            <Label fx:id="fromAccount" layoutX="274.0" layoutY="15.0" prefHeight="46.0" prefWidth="120.0" text="fromAccount" wrapText="true" />
+            <Label fx:id="toAccount" layoutX="343.0" layoutY="10.0" prefHeight="39.0" prefWidth="100.0" text="toAccount" wrapText="true">
+               <HBox.margin>
+                  <Insets />
                </HBox.margin></Label>
+            <Label fx:id="amount" layoutX="406.0" layoutY="10.0" prefHeight="39.0" prefWidth="146.0" text="Amount" />
          </children>
       </HBox>
    </children>

@@ -30,10 +30,15 @@ public class HomeController {
     @FXML
     Label userLabel;
     @FXML
+    Label  bankMessage;
+    @FXML
     VBox accountBox, transactionBox;
+
+    static String messageFromBank="Inga meddelanden";
 
     @FXML
     void initialize(){
+        bankMessage.setText(messageFromBank);
         userLabel.setText("Inloggad som: "+LoginController.getUser().getName());
         displayAccounts();
         displayTransactionsSummary(LoginController.getUser().getSocialNo());
@@ -110,6 +115,15 @@ public class HomeController {
         } catch (IOException e1) {
             e1.printStackTrace();
         }
+    }
+
+    public static void addBankMessage(String message){
+        messageFromBank=message;
+    }
+
+    @FXML
+    void chooseFunction(){
+
     }
 
     @FXML

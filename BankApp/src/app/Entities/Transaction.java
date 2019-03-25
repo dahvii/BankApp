@@ -50,10 +50,16 @@ public class Transaction {
         return date;
     }
 
+    public long getID() {
+        return id;
+    }
+
+
     @Override
     public String toString(){
-        return "Transaction: { fromAccoun: "+ fromAccount+" toAccount: "+toAccount+" amount: "+amount+
-                " message: "+message+" date:"+date+"}";
+        return "Transaktion: {från konto : "+ fromAccount+
+                "\n till konto: "+toAccount+" summa: "+amount+
+                " \nmeddelande: "+message+" datum:"+date+"}";
     }
 
 }

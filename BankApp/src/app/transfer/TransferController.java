@@ -79,7 +79,7 @@ public class TransferController {
         );
 
         if(date.isAfter(LocalDate.now())){
-            //Transfer.planTransaction(transaction);
+            Transfer.planTransaction(transaction);
         }else {
             Transfer.makeTransaction(transaction);
         }
@@ -131,6 +131,8 @@ public class TransferController {
     }
 
     private void clearTransactionPage(){
+        messageLbl.setText("Transaktion sparad");
+        messageLbl.setVisible(true);
         datePicker.setValue(LocalDate.now());
         amountInput.clear();
         messageInput.clear();

@@ -55,7 +55,7 @@
       <TextField fx:id="amountInput" />
       <Label text="meddelande:" />
       <TextField fx:id="messageInput" />
-      <Button mnemonicParsing="false" onAction="#submit" text="Gör transaktion" />
+      <Button mnemonicParsing="false" onAction="#submit" text="Spara" />
       <Label fx:id="messageLbl" prefHeight="96.0" prefWidth="500.0" text="errors" />
    </children>
    <padding>

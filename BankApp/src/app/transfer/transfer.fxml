@@ -43,14 +43,26 @@
             <Label text="Till konto: " />
             <RadioButton fx:id="fromOwnAccountRbtn" mnemonicParsing="false" onAction="#radioBtnFromOwnAccounts" selected="true" text="Eget konto">
                <toggleGroup>
-                  <ToggleGroup fx:id="radioBtnGroup" />
+                  <ToggleGroup fx:id="fromBtnGroup" />
                </toggleGroup>
             </RadioButton>
-            <RadioButton fx:id="writeInnAccountRbtn" mnemonicParsing="false" onAction="#radioBtnWriteInAccount" text="Skriv in konotnummer" toggleGroup="$radioBtnGroup" />
+            <RadioButton fx:id="writeInnAccountRbtn" mnemonicParsing="false" onAction="#radioBtnWriteInAccount" text="Skriv in konotnummer" toggleGroup="$fromBtnGroup" />
          </children>
       </HBox>
       <HBox fx:id="toAccountBox" prefHeight="100.0" prefWidth="200.0" />
       <DatePicker fx:id="datePicker" />
+      <Label text="Välj upprepning av transaktion" />
+      <HBox layoutX="30.0" layoutY="106.0" prefHeight="25.0" prefWidth="455.0">
+         <children>
+            <RadioButton fx:id="neverRbtn" mnemonicParsing="false" onAction="#radioBtnNeverRepeat" selected="true" text="Aldrig">
+               <toggleGroup>
+                  <ToggleGroup fx:id="repeatBtnGroup" />
+               </toggleGroup></RadioButton>
+            <RadioButton fx:id="weekRbtn" mnemonicParsing="false" onAction="#radioBtnWeekRepeat" text="Varje vecka" toggleGroup="$repeatBtnGroup" />
+            <RadioButton fx:id="monthRbtn" layoutX="71.0" layoutY="10.0" mnemonicParsing="false" onAction="#radioBtnMonthRepeat" text="Varje månad" toggleGroup="$repeatBtnGroup" />
+         </children>
+      </HBox>
+      <HBox fx:id="repeatBox" prefHeight="100.0" prefWidth="200.0" />
       <Label text="summa:" />
       <TextField fx:id="amountInput" />
       <Label text="meddelande:" />

@@ -26,20 +26,23 @@ public class TransferController {
     @FXML
     Label userLbl, messageLbl;
     @FXML
-    HBox toAccountBox;
+    HBox toAccountBox, repeatBox;
     @FXML
     ComboBox<String> fromAccount;
     @FXML
-    ToggleGroup radioBtnGroup;
-    @FXML
     TextField amountInput, messageInput;
+    @FXML
+    TextField repeatInput= new TextField();
     @FXML
     DatePicker datePicker;
     @FXML
-    RadioButton writeInnAccountRbtn, fromOwnAccountRbtn;
+    RadioButton writeInnAccountRbtn, fromOwnAccountRbtn,neverRbtn, monthRbtn, weekRbtn;
 
     ComboBox<String> toAccountdropdown;
     TextField toAccountTxt = new TextField();
+
+    private double amount;
+    private int repeat ;
 
     @FXML
     private void initialize(){
@@ -92,10 +95,16 @@ public class TransferController {
         Transaction transaction= new Transaction(
                 getAccountInput(fromAccount).getBankNr(),
                 toAccount.getBankNr(),
-                Double.parseDouble(amountInput.getText()),
+                amount,
                 messageInput.getText(),
                 sqlDate
         );
+
+        if(monthRbtn.isSelected()){
+            DB.planRepeatedTransaction(transaction, true, repeat);
+        }else if(weekRbtn.isSelected()){
+            DB.planRepeatedTransaction(transaction, false, repeat);
+        }
 
         if(date.isAfter(LocalDate.now())){
             DB.planTransaction(transaction);
@@ -106,7 +115,6 @@ public class TransferController {
 
     private boolean validateInput(Account toAccount){
         String errorMessage = messageLbl.getText();
-        double amount=0;
         boolean validate=true;
 
         if(getAccountInput(fromAccount) == null){
@@ -120,6 +128,21 @@ public class TransferController {
             errorMessage+="Välj ett datum som inte har passerat\n";
             validate=false;
 
+        }
+        if(monthRbtn.isSelected() ||  weekRbtn.isSelected()){
+            if(repeatInput.getText().isEmpty()){
+                errorMessage+="Fyll i hur länge du vill upprepa transaktionen\n";
+                validate=false;
+            }else {
+                try {
+                    repeat = Integer.parseInt(repeatInput.getText());
+                }
+                catch (Exception e) {
+                    errorMessage+="Fyll i giltigt antal veckor / månader\n";
+                    validate=false;
+                }
+
+            }
         }
         try {
             amount= Double.parseDouble(amountInput.getText());
@@ -137,7 +160,7 @@ public class TransferController {
             validate=false;
         }
         if(messageInput.getText().isEmpty()){
-            errorMessage+="Fyll i meddelande";
+            errorMessage+="Fyll i meddelande\n";
             validate=false;
         }
 
@@ -187,6 +210,8 @@ public class TransferController {
         amountInput.clear();
         messageInput.clear();
         toAccountTxt.clear();
+        repeatBox.getChildren().clear();
+        neverRbtn.setSelected(true);
     }
 
     private Account getAccountInput(ComboBox<String> comboBox){
@@ -203,6 +228,19 @@ public class TransferController {
         return choosenAccount;
     }
 
+    @FXML void radioBtnNeverRepeat() {
+        repeatBox.getChildren().clear();
+    }
+    @FXML void radioBtnWeekRepeat() {
+        repeatBox.getChildren().clear();
+        Label label = new Label("Fyll i hur många veckor");
+        repeatBox.getChildren().addAll(label, repeatInput);
+    }
+    @FXML void radioBtnMonthRepeat() {
+        repeatBox.getChildren().clear();
+        Label label = new Label("Fyll i hur många månader");
+        repeatBox.getChildren().addAll(label, repeatInput);
+    }
 
     @FXML void radioBtnFromOwnAccounts() {
         toAccountBox.getChildren().clear();

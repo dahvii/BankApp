@@ -32,7 +32,7 @@
             </Button>
          </children>
       </HBox>
-      <VBox prefHeight="77.0" prefWidth="455.0">
+      <VBox prefHeight="101.0" prefWidth="415.0">
          <children>
             <Label text="Från konto: " />
             <ComboBox fx:id="fromAccount" prefHeight="27.0" />
@@ -41,12 +41,12 @@
       <HBox layoutX="10.0" layoutY="45.0" prefHeight="25.0" prefWidth="455.0">
          <children>
             <Label text="Till konto: " />
-            <RadioButton mnemonicParsing="false" onAction="#radioBtnFromOwnAccounts" selected="true" text="Eget konto">
+            <RadioButton fx:id="fromOwnAccountRbtn" mnemonicParsing="false" onAction="#radioBtnFromOwnAccounts" selected="true" text="Eget konto">
                <toggleGroup>
                   <ToggleGroup fx:id="radioBtnGroup" />
                </toggleGroup>
             </RadioButton>
-            <RadioButton mnemonicParsing="false" onAction="#radioBtnWriteInAccount" text="Skriv in konotnummer" toggleGroup="$radioBtnGroup" />
+            <RadioButton fx:id="writeInnAccountRbtn" mnemonicParsing="false" onAction="#radioBtnWriteInAccount" text="Skriv in konotnummer" toggleGroup="$radioBtnGroup" />
          </children>
       </HBox>
       <HBox fx:id="toAccountBox" prefHeight="100.0" prefWidth="200.0" />
@@ -56,7 +56,7 @@
       <Label text="meddelande:" />
       <TextField fx:id="messageInput" />
       <Button mnemonicParsing="false" onAction="#submit" text="Spara" />
-      <Label fx:id="messageLbl" prefHeight="96.0" prefWidth="500.0" text="errors" />
+      <Label fx:id="messageLbl" prefHeight="244.0" prefWidth="415.0" />
    </children>
    <padding>
       <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />

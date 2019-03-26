@@ -169,7 +169,6 @@ public abstract class DB {
             //System.out.println("statment redo datum är "+transaction.getDate());
             //System.out.println(statement);
             executeUpdate(statement);
-            AccountFunction.displayConfirmBox("Transaktion genomförd");
 
         }else{
             HomeController.addBankMessage("Nedan planerad överföring kunde inte genomföras\n"+

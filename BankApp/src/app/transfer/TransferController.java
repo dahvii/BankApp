@@ -18,6 +18,8 @@ import java.sql.Date;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class TransferController {
 
@@ -33,8 +35,11 @@ public class TransferController {
     TextField amountInput, messageInput;
     @FXML
     DatePicker datePicker;
+    @FXML
+    RadioButton writeInnAccountRbtn, fromOwnAccountRbtn;
 
-    ComboBox<String> toAccount;
+    ComboBox<String> toAccountdropdown;
+    TextField toAccountTxt = new TextField();
 
     @FXML
     private void initialize(){
@@ -65,19 +70,28 @@ public class TransferController {
 
     @FXML
     void submit() throws ParseException {
-        if(validateInput()) {
-            buildTransaction();
+        Account toAccount = null;
+
+        if (fromOwnAccountRbtn.isSelected()) {
+            toAccount = validateToOwnAccount();
+
+        }else {
+            toAccount = validateBankNr();
+        }
+
+        if (validateInput(toAccount) && toAccount != null){
+            buildTransaction(toAccount);
             clearTransactionPage();
         }
     }
 
-    private void buildTransaction() throws ParseException {
+    private void buildTransaction(Account toAccount) throws ParseException {
         LocalDate date = datePicker.getValue();
         Date sqlDate = Date.valueOf(date);
 
         Transaction transaction= new Transaction(
                 getAccountInput(fromAccount).getBankNr(),
-                getAccountInput(toAccount).getBankNr(),
+                toAccount.getBankNr(),
                 Double.parseDouble(amountInput.getText()),
                 messageInput.getText(),
                 sqlDate
@@ -90,16 +104,15 @@ public class TransferController {
         }
     }
 
-    private boolean validateInput(){
-        messageLbl.setVisible(false);
-        String errorMessage = "";
+    private boolean validateInput(Account toAccount){
+        String errorMessage = messageLbl.getText();
         double amount=0;
         boolean validate=true;
 
-        if(getAccountInput(fromAccount) == null || getAccountInput(toAccount) == null){
-            errorMessage+="Välj konto\n";
+        if(getAccountInput(fromAccount) == null){
+            errorMessage+="Välj konto att skicka ifrån\n";
             validate=false;
-        }else if(getAccountInput(fromAccount).getBankNr().equals(getAccountInput(toAccount).getBankNr())){
+        }else if(toAccount != null && getAccountInput(fromAccount).getBankNr().equals(toAccount.getBankNr())){
             errorMessage+="Transaktion kan inte göras mellan samma konto, välj annat konto\n";
             validate=false;
         }
@@ -135,12 +148,45 @@ public class TransferController {
         return validate;
     }
 
+    private Account validateToOwnAccount(){
+        Account toAccount = getAccountInput(toAccountdropdown);
+        if( toAccount == null) {
+            messageLbl.setText("Välj konto att skicka till\n");
+            messageLbl.setVisible(true);
+        }else{
+            messageLbl.setText("");
+        }
+        return toAccount;
+    }
+
+
+    private Account validateBankNr(){
+        Matcher matcher = Pattern.compile("^\\d{10}$").matcher(toAccountTxt.getText());
+        String errors="";
+
+        if(matcher.matches()){
+            Account toAccount = DB.getAccount(toAccountTxt.getText());
+            if(toAccount == null){
+                errors += "Kontot finns inte\n";
+            }else {
+                messageLbl.setText("");
+                return toAccount;
+            }
+        }else {
+            errors += "Du har inte fyllt i kontonummret rätt\n";
+        }
+        messageLbl.setText(errors);
+        messageLbl.setVisible(true);
+        return null;
+    }
+
     private void clearTransactionPage(){
         messageLbl.setText("Transaktion sparad");
         messageLbl.setVisible(true);
         datePicker.setValue(LocalDate.now());
         amountInput.clear();
         messageInput.clear();
+        toAccountTxt.clear();
     }
 
     private Account getAccountInput(ComboBox<String> comboBox){
@@ -160,15 +206,18 @@ public class TransferController {
 
     @FXML void radioBtnFromOwnAccounts() {
         toAccountBox.getChildren().clear();
-        toAccount = new ComboBox<>();
-        displayAccountChoice(toAccount);
-        toAccountBox.getChildren().add(toAccount);
+        toAccountdropdown = new ComboBox<>();
+        displayAccountChoice(toAccountdropdown);
+        toAccountBox.getChildren().add(toAccountdropdown);
 
     }
 
     @FXML void radioBtnWriteInAccount() {
         toAccountBox.getChildren().clear();
-        System.out.println("du vill skriva in konto själv jao");
+
+        Label accountLbl = new Label("Fyll i kontonummret du vill skicka till (10 siffror)");
+
+        toAccountBox.getChildren().addAll(accountLbl, toAccountTxt);
     }
 
     @FXML void goToHome() { switchScene("/app/home/home.fxml"); }

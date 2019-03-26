@@ -62,6 +62,16 @@ public abstract class DB {
         return result;
     }
 
+    public static List<Transaction> getCardTransactionsForOneWeek(String bankNr, Date oneWeekAgo){
+        List<Transaction> result = null;
+        PreparedStatement ps = prep("SELECT * FROM transactions WHERE fromAccount = ? AND date >= ?");
+        try {
+            ps.setString(1, bankNr);
+            ps.setDate(2, oneWeekAgo);
+            result = (List<Transaction>)(List<?>)new ObjectMapper<>(Transaction.class).map(ps.executeQuery());
+        } catch (Exception e) { e.printStackTrace(); }
+        return result;
+    }
 
     //hämtar alla transaktioner från en viss användare
     public static List<Transaction> getUserTransactions(String socialNo, int offset, int limit){
@@ -93,7 +103,6 @@ public abstract class DB {
         }else{ return true;}
     }
 
-
     public static List<Account> getAccounts(String socialNo){
         List<Account> result = null;
         PreparedStatement ps = prep("SELECT * FROM accounts WHERE user = ?");
@@ -124,22 +133,46 @@ public abstract class DB {
     }
 
     public static void makeCardTransaction(Account account, double amount){
-        LocalDate date = LocalDate.now();
-        Date sqlDate = Date.valueOf(date);
+        if(reachedCardBoundary(account, amount)){
+            AccountFunction.displayConfirmBox("Kan inte göra kortköp eftersom ditt saldotak är "+account.getBoundary()
+                    +" och köpet du försöker göra går över det");
+        }else {
+            LocalDate date = LocalDate.now();
+            Date sqlDate = Date.valueOf(date);
 
-        Transaction transaction = new Transaction(
-                account.getBankNr(),
-                null,
-                amount,
-                "Kortbetalning",
-                sqlDate
-        );
-        makeTransaction(transaction);
-        AccountFunction.displayConfirmBox("Kortbetalning registrerad");
+            Transaction transaction = new Transaction(
+                    account.getBankNr(),
+                    null,
+                    amount,
+                    "Kortbetalning",
+                    sqlDate
+            );
+            makeTransaction(transaction);
+            AccountFunction.displayConfirmBox("Kortbetalning registrerad");
+        }
+    }
+
+    private  static boolean reachedCardBoundary(Account account, double amount){
+        LocalDate oneWeekBefore = LocalDate.now().minusWeeks(1);
+        List<Transaction> transactions = getCardTransactionsForOneWeek(account.getBankNr(), Date.valueOf(oneWeekBefore));
+        double weekAmount = amount;
+        for(Transaction transaction: transactions){
+            weekAmount += transaction.getAmount();
+        }
+        if(weekAmount >= account.getBoundary()){
+            return true;
+        }else {
+            return false;
+        }
     }
 
     public static void upDateAccount(Account account, String column, String value){
-        PreparedStatement ps = prep("UPDATE accounts SET "+column+" = ? WHERE bankNr = ?;");
+        PreparedStatement ps;
+        if(column.equals("function") && value.equals("Kortkonto")){
+            ps = prep("UPDATE accounts SET "+column+" = ?, boundary = 30000 WHERE bankNr = ?;");
+        }else{
+            ps = prep("UPDATE accounts SET "+column+" = ? WHERE bankNr = ?;");
+        }
         try {
             ps.setString(1, value);
             ps.setString(2, account.getBankNr());
@@ -149,12 +182,20 @@ public abstract class DB {
         AccountFunction.displayConfirmBox("Konto uppdaterat");
     }
 
+    public static void upDateBoundary(Account account, int boundary){
+        PreparedStatement ps = prep("UPDATE accounts SET boundary = ? WHERE bankNr = ?;");
+        try {
+            ps.setInt(1, boundary);
+            ps.setString(2, account.getBankNr());
+        } catch (Exception e) { e.printStackTrace(); }
+        DB.executeUpdate(ps);
+        AccountFunction.displayConfirmBox("Saldotak uppdaterat");
+    }
+
     public static void makeTransaction(Transaction transaction){
         //if there is enough money on account, make the transaction
         if(subtractMoney(transaction.getFromAccount(), transaction.getAmount())) {
             addMoney(transaction.getToAccount(), transaction.getAmount());
-
-            //System.out.println("redo att göra transaktion datum är "+transaction.getDate());
             PreparedStatement statement = prep("INSERT INTO transactions (fromAccount, toAccount, amount, message, date) VALUES (?,?,?,?,?)");
             try {
                 statement.setString(1,transaction.getFromAccount() );
@@ -165,17 +206,37 @@ public abstract class DB {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-
-            //System.out.println("statment redo datum är "+transaction.getDate());
-            //System.out.println(statement);
             executeUpdate(statement);
-            AccountFunction.displayConfirmBox("Transaktion genomförd");
 
         }else{
-            HomeController.addBankMessage("Nedan planerad överföring kunde inte genomföras\n"+
+            AccountFunction.displayConfirmBox("Nedan överföring kunde inte genomföras\n"+
                     transaction
             );
         }
+    }
+
+    public static void planRepeatedTransaction(Transaction transaction, boolean month, int repeat){
+        LocalDate newDate = transaction.getDate().toLocalDate();
+        for(int i= 0; i < repeat ; i++){
+            if (month){
+                newDate = newDate.plusMonths(1);
+
+            }else {
+                newDate = newDate.plusWeeks(1);
+            }
+            Date sqlDate = Date.valueOf(newDate);
+
+            Transaction newTransaction= new Transaction(
+                    transaction.getFromAccount(),
+                    transaction.getToAccount(),
+                    transaction.getAmount(),
+                    transaction.getMessage()+"\nupprepande transaktion",
+                    sqlDate
+            );
+
+            DB.planTransaction(newTransaction);
+        }
+
     }
 
     public static void planTransaction(Transaction transaction){
@@ -190,7 +251,6 @@ public abstract class DB {
             e.printStackTrace();
         }
         executeUpdate(statement);
-
     }
 
     public static void deletePlannedTransaction(Transaction transaction){
@@ -271,7 +331,14 @@ public abstract class DB {
     }
 
     public static void addAccount(String name, String function){
-        PreparedStatement statement = prep("INSERT INTO accounts VALUES (?,?,?,?,?)");
+        PreparedStatement statement;
+
+        if(function.equals("Kortkonto")){
+            statement = prep("INSERT INTO accounts VALUES (?,?,?,?,?, 30000)");
+
+        }else {
+            statement = prep("INSERT INTO accounts VALUES (?,?,?,?,?, NULL)");
+        }
         try {
             statement.setString(1, generateBankNr());
             statement.setString(2, name );
@@ -309,17 +376,4 @@ public abstract class DB {
         return bankNr;
     }
 
-  /*
-        Example method with default parameters
-    public static List<Transaction> getTransactions(int accountId){ return getTransactions(accountId, 0, 10); }
-    public static List<Transaction> getTransactions(int accountId, int offset){ return getTransactions(accountId, offset, offset + 10); }
-    public static List<Transaction> getTransactions(int accountId, int offset, int limit){
-        List<Transaction> result = null;
-        PreparedStatement ps = prep("bla bla from transactions WHERE account-id = "+accountId+" OFFSET "+offset+" LIMIT "+limit);
-        try {
-            result = (List<Transaction>)new ObjectMapper<>(Transaction.class).map(ps.executeQuery());
-        } catch (Exception e) { e.printStackTrace(); }
-        return result; // return User;
-    }
-    */
 }

@@ -18,23 +18,31 @@ import java.sql.Date;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class TransferController {
 
     @FXML
     Label userLbl, messageLbl;
     @FXML
-    HBox toAccountBox;
+    HBox toAccountBox, repeatBox;
     @FXML
     ComboBox<String> fromAccount;
     @FXML
-    ToggleGroup radioBtnGroup;
-    @FXML
     TextField amountInput, messageInput;
     @FXML
+    TextField repeatInput= new TextField();
+    @FXML
     DatePicker datePicker;
+    @FXML
+    RadioButton writeInnAccountRbtn, fromOwnAccountRbtn,neverRbtn, monthRbtn, weekRbtn;
 
-    ComboBox<String> toAccount;
+    ComboBox<String> toAccountdropdown;
+    TextField toAccountTxt = new TextField();
+
+    private double amount;
+    private int repeat ;
 
     @FXML
     private void initialize(){
@@ -65,23 +73,38 @@ public class TransferController {
 
     @FXML
     void submit() throws ParseException {
-        if(validateInput()) {
-            buildTransaction();
+        Account toAccount = null;
+
+        if (fromOwnAccountRbtn.isSelected()) {
+            toAccount = validateToOwnAccount();
+
+        }else {
+            toAccount = validateBankNr();
+        }
+
+        if (validateInput(toAccount) && toAccount != null){
+            buildTransaction(toAccount);
             clearTransactionPage();
         }
     }
 
-    private void buildTransaction() throws ParseException {
+    private void buildTransaction(Account toAccount) throws ParseException {
         LocalDate date = datePicker.getValue();
         Date sqlDate = Date.valueOf(date);
 
         Transaction transaction= new Transaction(
                 getAccountInput(fromAccount).getBankNr(),
-                getAccountInput(toAccount).getBankNr(),
-                Double.parseDouble(amountInput.getText()),
+                toAccount.getBankNr(),
+                amount,
                 messageInput.getText(),
                 sqlDate
         );
+
+        if(monthRbtn.isSelected()){
+            DB.planRepeatedTransaction(transaction, true, repeat);
+        }else if(weekRbtn.isSelected()){
+            DB.planRepeatedTransaction(transaction, false, repeat);
+        }
 
         if(date.isAfter(LocalDate.now())){
             DB.planTransaction(transaction);
@@ -90,16 +113,14 @@ public class TransferController {
         }
     }
 
-    private boolean validateInput(){
-        messageLbl.setVisible(false);
-        String errorMessage = "";
-        double amount=0;
+    private boolean validateInput(Account toAccount){
+        String errorMessage = messageLbl.getText();
         boolean validate=true;
 
-        if(getAccountInput(fromAccount) == null || getAccountInput(toAccount) == null){
-            errorMessage+="Välj konto\n";
+        if(getAccountInput(fromAccount) == null){
+            errorMessage+="Välj konto att skicka ifrån\n";
             validate=false;
-        }else if(getAccountInput(fromAccount).getBankNr().equals(getAccountInput(toAccount).getBankNr())){
+        }else if(toAccount != null && getAccountInput(fromAccount).getBankNr().equals(toAccount.getBankNr())){
             errorMessage+="Transaktion kan inte göras mellan samma konto, välj annat konto\n";
             validate=false;
         }
@@ -107,6 +128,21 @@ public class TransferController {
             errorMessage+="Välj ett datum som inte har passerat\n";
             validate=false;
 
+        }
+        if(monthRbtn.isSelected() ||  weekRbtn.isSelected()){
+            if(repeatInput.getText().isEmpty()){
+                errorMessage+="Fyll i hur länge du vill upprepa transaktionen\n";
+                validate=false;
+            }else {
+                try {
+                    repeat = Integer.parseInt(repeatInput.getText());
+                }
+                catch (Exception e) {
+                    errorMessage+="Fyll i giltigt antal veckor / månader\n";
+                    validate=false;
+                }
+
+            }
         }
         try {
             amount= Double.parseDouble(amountInput.getText());
@@ -124,7 +160,7 @@ public class TransferController {
             validate=false;
         }
         if(messageInput.getText().isEmpty()){
-            errorMessage+="Fyll i meddelande";
+            errorMessage+="Fyll i meddelande\n";
             validate=false;
         }
 
@@ -135,12 +171,47 @@ public class TransferController {
         return validate;
     }
 
+    private Account validateToOwnAccount(){
+        Account toAccount = getAccountInput(toAccountdropdown);
+        if( toAccount == null) {
+            messageLbl.setText("Välj konto att skicka till\n");
+            messageLbl.setVisible(true);
+        }else{
+            messageLbl.setText("");
+        }
+        return toAccount;
+    }
+
+
+    private Account validateBankNr(){
+        Matcher matcher = Pattern.compile("^\\d{10}$").matcher(toAccountTxt.getText());
+        String errors="";
+
+        if(matcher.matches()){
+            Account toAccount = DB.getAccount(toAccountTxt.getText());
+            if(toAccount == null){
+                errors += "Kontot finns inte\n";
+            }else {
+                messageLbl.setText("");
+                return toAccount;
+            }
+        }else {
+            errors += "Du har inte fyllt i kontonummret rätt\n";
+        }
+        messageLbl.setText(errors);
+        messageLbl.setVisible(true);
+        return null;
+    }
+
     private void clearTransactionPage(){
         messageLbl.setText("Transaktion sparad");
         messageLbl.setVisible(true);
         datePicker.setValue(LocalDate.now());
         amountInput.clear();
         messageInput.clear();
+        toAccountTxt.clear();
+        repeatBox.getChildren().clear();
+        neverRbtn.setSelected(true);
     }
 
     private Account getAccountInput(ComboBox<String> comboBox){
@@ -157,18 +228,34 @@ public class TransferController {
         return choosenAccount;
     }
 
+    @FXML void radioBtnNeverRepeat() {
+        repeatBox.getChildren().clear();
+    }
+    @FXML void radioBtnWeekRepeat() {
+        repeatBox.getChildren().clear();
+        Label label = new Label("Fyll i hur många veckor");
+        repeatBox.getChildren().addAll(label, repeatInput);
+    }
+    @FXML void radioBtnMonthRepeat() {
+        repeatBox.getChildren().clear();
+        Label label = new Label("Fyll i hur många månader");
+        repeatBox.getChildren().addAll(label, repeatInput);
+    }
 
     @FXML void radioBtnFromOwnAccounts() {
         toAccountBox.getChildren().clear();
-        toAccount = new ComboBox<>();
-        displayAccountChoice(toAccount);
-        toAccountBox.getChildren().add(toAccount);
+        toAccountdropdown = new ComboBox<>();
+        displayAccountChoice(toAccountdropdown);
+        toAccountBox.getChildren().add(toAccountdropdown);
 
     }
 
     @FXML void radioBtnWriteInAccount() {
         toAccountBox.getChildren().clear();
-        System.out.println("du vill skriva in konto själv jao");
+
+        Label accountLbl = new Label("Fyll i kontonummret du vill skicka till (10 siffror)");
+
+        toAccountBox.getChildren().addAll(accountLbl, toAccountTxt);
     }
 
     @FXML void goToHome() { switchScene("/app/home/home.fxml"); }

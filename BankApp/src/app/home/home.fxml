@@ -70,6 +70,7 @@
                            </VBox.margin>
                         </Button>
                         <Button mnemonicParsing="false" onAction="#chooseFunction" text="Välj funktion för konto" />
+                        <Button mnemonicParsing="false" onAction="#changeLimit" text="Ändra saldotak för kort" />
                         <Label layoutX="10.0" layoutY="100.0" prefHeight="33.0" prefWidth="127.0" text="fuskis funktioner" underline="true">
                            <font>
                               <Font name="System Bold" size="14.0" />
@@ -77,12 +78,6 @@
                         </Label>
                         <Button layoutX="10.0" layoutY="138.0" onAction="#planSalary" prefHeight="27.0" text="Få en planerad löneinsätning" />
                         <Button layoutX="10.0" layoutY="175.0" onAction="#cardPayment" prefHeight="27.0" text="Gör ett kortköp " />
-                        <Label layoutX="10.0" layoutY="100.0" prefHeight="33.0" prefWidth="127.0" text="Meddelanden" underline="true">
-                           <font>
-                              <Font name="System Bold" size="14.0" />
-                           </font>
-                        </Label>
-                        <Label fx:id="bankMessage" alignment="TOP_LEFT" minHeight="-Infinity" minWidth="-Infinity" prefHeight="125.0" prefWidth="399.0" />
                      </children>
                   </VBox>
                </children>

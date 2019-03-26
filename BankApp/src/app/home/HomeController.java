@@ -29,11 +29,8 @@ public class HomeController {
     @FXML
     VBox accountBox, transactionBox;
 
-    static String messageFromBank="Inga meddelanden";
-
     @FXML
     void initialize(){
-        bankMessage.setText(messageFromBank);
         userLbl.setText("Inloggad som: "+LoginController.getUser().getName());
         displayAccounts();
         displayTransactionsSummary(LoginController.getUser().getSocialNo());
@@ -105,14 +102,22 @@ public class HomeController {
         }
     }
 
-    public static void addBankMessage(String message){
-        messageFromBank=message;
-    }
 
     @FXML
     void addAccount(){
         AccountFunction.displayAddAccountBox();
         reload();
+    }
+
+    @FXML
+    void changeLimit(){
+        Account account = DB.accountHasFunction("Kortkonto");
+        if(account != null){
+            int limit = (int) AccountFunction.displayAmountBox("Fyll i summan för saldotak");
+            DB.upDateBoundary(account, limit);
+        }else{
+            AccountFunction.displayConfirmBox("Du måste registrera ett kortkonto innan du kan ändra saldotak!");
+        }
     }
 
     @FXML
@@ -136,7 +141,7 @@ public class HomeController {
     void cardPayment(){
         Account account = DB.accountHasFunction("Kortkonto");
         if(account != null){
-            double amount = AccountFunction.displayAmountBox();
+            double amount = AccountFunction.displayAmountBox("Fyll i summan för kortköpet");
             if (amount > 0) {
                 DB.makeCardTransaction(account, amount);
             }

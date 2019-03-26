@@ -14,7 +14,8 @@ public class Account {
     private String user;
     @Column("balance")
     private double balance;
-
+    @Column("boundary")
+    private long boundary;
 
     public String getBankNr() {
         return bankNr;
@@ -33,6 +34,8 @@ public class Account {
     }
 
     public double getBalance() { return balance; }
+
+    public long getBoundary(){return boundary;}
 
      @Override
      public String toString(){

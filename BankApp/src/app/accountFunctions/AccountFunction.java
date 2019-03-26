@@ -35,10 +35,10 @@ public class AccountFunction {
         window.showAndWait();
     }
 
-    public static double displayAmountBox(){
+    public static double displayAmountBox(String message){
         Stage window = getStage();
 
-        Label label = new Label("Fyll i summan för kortköpet");
+        Label label = new Label(message);
         TextField input = new TextField();
 
         Button okBtn = new Button("Ok");
@@ -177,7 +177,6 @@ public class AccountFunction {
 
         submitBtn.setOnAction(e -> {
             Account acccount = getAccountInput(accounts);
-
             if (acccount == null || functions.getValue() == null){
                 error.setText("Du måste välja konto och funktion");
                 error.setVisible(true);

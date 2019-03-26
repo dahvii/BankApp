@@ -1,7 +1,6 @@
 package app.db;
 
 import app.Entities.Transaction;
-import app.transfer.Transfer;
 
 import java.sql.*;
 import java.util.HashMap;
@@ -73,9 +72,8 @@ public class Database {
 
             if (plannedTransactions != null){
                 for (Transaction transaction: plannedTransactions){
-                    Transfer.makeTransaction(transaction);
-                    Transfer.deletePlannedTransaction(transaction);
-                    System.out.println(transaction);
+                    DB.makeTransaction(transaction);
+                    DB.deletePlannedTransaction(transaction);
                 }
             }
 

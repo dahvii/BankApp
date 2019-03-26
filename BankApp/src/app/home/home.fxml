@@ -14,7 +14,7 @@
          <children>
             <HBox alignment="BASELINE_LEFT" prefHeight="35.0" prefWidth="455.0">
                <children>
-                  <Label fx:id="userLabel" prefHeight="29.0" prefWidth="188.0" text="Inloggad User" />
+                  <Label fx:id="userLbl" prefHeight="29.0" prefWidth="188.0" text="Inloggad User" />
                   <Label alignment="CENTER" graphicTextGap="9.0" prefHeight="46.0" prefWidth="152.0" text="SwedenBank" textOverrun="CENTER_ELLIPSIS">
                      <opaqueInsets>
                         <Insets />
@@ -25,9 +25,9 @@
                   </Label>
                </children>
             </HBox>
-            <HBox prefHeight="343.0" prefWidth="526.0">
+            <HBox prefWidth="526.0">
                <children>
-                  <VBox fx:id="accountBox" prefHeight="343.0" prefWidth="271.0">
+                  <VBox fx:id="accountBox" prefWidth="271.0">
                      <children>
                         <Label prefHeight="36.0" prefWidth="265.0" text="Dina konton:" underline="true">
                            <font>
@@ -36,7 +36,7 @@
                         </Label>
                      </children>
                   </VBox>
-                  <VBox prefHeight="343.0" prefWidth="271.0">
+                  <VBox prefWidth="271.0">
                      <children>
                         <Button onAction="#goToTransfer" prefHeight="40.0" prefWidth="257.0" text="Betala och Överföra">
                            <font>
@@ -54,21 +54,35 @@
                               <Insets top="20.0" />
                            </VBox.margin>
                         </Label>
-                        <Button prefHeight="27.0" text="Skapa nytt konto" translateY="8.0">
+                        <Button onAction="#addAccount" prefHeight="27.0" text="Skapa nytt konto" translateY="8.0">
                            <VBox.margin>
                               <Insets bottom="5.0" top="5.0" />
                            </VBox.margin>
                         </Button>
-                        <Button prefHeight="27.0" text="Byt namn på befintligt konto">
+                        <Button onAction="#renameAccount" prefHeight="27.0" text="Byt namn på befintligt konto">
                            <VBox.margin>
                               <Insets bottom="5.0" top="5.0" />
                            </VBox.margin>
                         </Button>
-                        <Button prefHeight="27.0" text="Ta bort konto">
+                        <Button onAction="#deleteAccount" prefHeight="27.0" text="Ta bort konto">
                            <VBox.margin>
                               <Insets />
                            </VBox.margin>
                         </Button>
+                        <Button mnemonicParsing="false" onAction="#chooseFunction" text="Välj funktion för konto" />
+                        <Label layoutX="10.0" layoutY="100.0" prefHeight="33.0" prefWidth="127.0" text="fuskis funktioner" underline="true">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                        </Label>
+                        <Button layoutX="10.0" layoutY="138.0" onAction="#planSalary" prefHeight="27.0" text="Få en planerad löneinsätning" />
+                        <Button layoutX="10.0" layoutY="175.0" onAction="#cardPayment" prefHeight="27.0" text="Gör ett kortköp " />
+                        <Label layoutX="10.0" layoutY="100.0" prefHeight="33.0" prefWidth="127.0" text="Meddelanden" underline="true">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="bankMessage" alignment="TOP_LEFT" minHeight="-Infinity" minWidth="-Infinity" prefHeight="125.0" prefWidth="399.0" />
                      </children>
                   </VBox>
                </children>

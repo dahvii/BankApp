@@ -16,7 +16,7 @@
    <children>
       <HBox alignment="BASELINE_CENTER" prefHeight="35.0" prefWidth="455.0">
          <children>
-            <Label fx:id="userLabel" prefHeight="29.0" prefWidth="188.0" text="Inloggad User" />
+            <Label fx:id="userLbl" prefHeight="29.0" prefWidth="188.0" text="Inloggad User" />
             <Label alignment="CENTER" graphicTextGap="9.0" prefHeight="46.0" prefWidth="152.0" text="SwedenBank" textOverrun="CENTER_ELLIPSIS">
                <opaqueInsets>
                   <Insets />

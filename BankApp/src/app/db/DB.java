@@ -4,7 +4,6 @@ import app.Entities.Account;
 import app.Entities.Transaction;
 import app.Entities.User;
 import app.accountFunctions.AccountFunction;
-import app.home.HomeController;
 import app.login.LoginController;
 
 import java.sql.*;
@@ -159,7 +158,7 @@ public abstract class DB {
         for(Transaction transaction: transactions){
             weekAmount += transaction.getAmount();
         }
-        if(weekAmount >= account.getBoundary()){
+        if(weekAmount > account.getBoundary()){
             return true;
         }else {
             return false;
@@ -333,7 +332,7 @@ public abstract class DB {
     public static void addAccount(String name, String function){
         PreparedStatement statement;
 
-        if(function.equals("Kortkonto")){
+        if(function != null && function.equals("Kortkonto")){
             statement = prep("INSERT INTO accounts VALUES (?,?,?,?,?, 30000)");
 
         }else {

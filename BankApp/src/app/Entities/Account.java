@@ -1,7 +1,6 @@
 package app.Entities;
 
 import app.annotations.Column;
-import java.time.LocalDate;
 
 public class Account {
     @Column("bankNr")

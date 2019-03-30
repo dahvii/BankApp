@@ -25,8 +25,6 @@ public class HomeController {
     @FXML
     Label userLbl;
     @FXML
-    Label  bankMessage;
-    @FXML
     VBox accountBox, transactionBox;
 
     @FXML
@@ -45,17 +43,21 @@ public class HomeController {
     }
 
     void displayAccount(Account account){
-        // For every account, do the following:
         HBox accountContent = new HBox();
 
         Button accountBtn = new Button();
         accountBtn.setId(account.getBankNr());
         accountBtn.setOnAction(e -> goToAccount(e));
-        if(account.getName() == null){
-            accountBtn.setText(account.getBankNr());
-        }else {
-            accountBtn.setText(account.getName()+"\n"+account.getBankNr());
+
+        String accountInfo="";
+        if (account.getName() != null){
+            accountInfo+=account.getName()+"\n";
         }
+        if(account.getFunction() != null){
+            accountInfo+=account.getFunction()+"\n";
+        }
+        accountInfo+= account.getBankNr();
+        accountBtn.setText(accountInfo);
 
         Label balance = new Label();
         balance.setText("saldo: "+account.getBalance());
@@ -75,7 +77,6 @@ public class HomeController {
     }
 
     void displayTransaction(Transaction transaction){
-        // For every transaction, do the following:
         try {
             FXMLLoader loader = new FXMLLoader( getClass().getResource( "/app/transaction/transaction.fxml" ) );
             Parent fxmlInstance = loader.load();
@@ -114,7 +115,9 @@ public class HomeController {
         Account account = DB.accountHasFunction("Kortkonto");
         if(account != null){
             int limit = (int) AccountFunction.displayAmountBox("Fyll i summan för saldotak");
-            DB.upDateBoundary(account, limit);
+            if (limit > 0){
+                DB.upDateBoundary(account, limit);
+            }
         }else{
             AccountFunction.displayConfirmBox("Du måste registrera ett kortkonto innan du kan ändra saldotak!");
         }
@@ -134,7 +137,6 @@ public class HomeController {
     @FXML
     void chooseFunction(){
         AccountFunction.displayAccountFunctions();
-
     }
 
     @FXML
@@ -181,7 +183,6 @@ public class HomeController {
         controller.setAccount(account);
         Main.stage.setScene(scene);
         Main.stage.show();
-
     }
     @FXML
     void goToTransfer(){

@@ -23,11 +23,4 @@ public class User {
         return name;
     }
 
-    /*@Column("age")
-    private int age;
-
-    @Override
-    public String toString(){
-        return String.format("User: { id: %d, name: %s, age: %d }", id, name, age);
-    }*/
 }

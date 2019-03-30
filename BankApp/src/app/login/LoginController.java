@@ -1,13 +1,7 @@
 package app.login;
-
-
-import app.AddToTable;
-import app.Entities.Account;
 import app.Entities.User;
 import app.Main;
 import app.db.DB;
-import app.db.Database;
-import app.db.ObjectMapper;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -16,14 +10,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-
 import java.io.IOException;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 public class LoginController {
 
@@ -36,7 +23,6 @@ public class LoginController {
     @FXML
     Button logInBtn;
 
-    // Use this in other Controllers to get "the currently logged in user".
     private static User user = null;
     public static User getUser() { return user; }
 
@@ -75,8 +61,6 @@ public class LoginController {
             else{
                 goToHome();
             }
-            //socialNoInput.clear();
-            //passwordInput.clear();
         }
         else{
             errorNoInput.setStyle("visibility: visible;");

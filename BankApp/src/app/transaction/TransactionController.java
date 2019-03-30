@@ -23,6 +23,7 @@ public class TransactionController {
         betweenOwnAccountsLbl.setVisible(false);
     }
 
+    //för att sätta värden vid display av flera kontons transaktioner
     public void setTransaction(Transaction transaction, List<Account> accounts) {
         //är summan dragen eller tillagd från/till något av användarens konton?
         for(Account account: accounts){
@@ -45,6 +46,22 @@ public class TransactionController {
         fromAccount.setText("från konto: "+transaction.getFromAccount());
         toAccount.setText("till konto: "+ transaction.getToAccount());
     }
+
+    //för att sätta värden vid display av ett kontons transaktioner
+    public void setTransaction(Transaction transaction, Account account) {
+        //är summan dragen eller tillagd från/till kontot?
+        if(account.getBankNr().equals(transaction.getFromAccount())){
+            amount.setText("-"+transaction.getAmount());
+        }else if (account.getBankNr().equals(transaction.getToAccount())) {
+            amount.setText("+"+transaction.getAmount());
+        }
+        message.setText(transaction.getMessage());
+        date.setText(""+transaction.getDate());
+
+        fromAccount.setText("från konto: "+transaction.getFromAccount());
+        toAccount.setText("till konto: "+ transaction.getToAccount());
+    }
+
     public boolean isBetweenOwnAccounts(Transaction transaction, List<Account> accounts) {
 
         for(Account account: accounts){
@@ -58,20 +75,5 @@ public class TransactionController {
         }
 
         return false;
-    }
-
-
-    public void setTransaction(Transaction transaction, Account account) {
-
-        if(account.getBankNr().equals(transaction.getFromAccount())){
-            amount.setText("-"+transaction.getAmount());
-
-        }else{
-            amount.setText("+"+transaction.getAmount());
-
-        }
-
-        message.setText(transaction.getMessage());
-        date.setText(""+transaction.getDate());
     }
 }

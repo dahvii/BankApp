@@ -3,7 +3,6 @@ package app.accountFunctions;
 import app.Entities.Account;
 import app.db.DB;
 import app.login.LoginController;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;

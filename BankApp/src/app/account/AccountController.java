@@ -29,17 +29,25 @@ public class AccountController {
     int offset;
 
     public void setAccount(Account account){
+        this.account= account;
         userLbl.setText("Inloggad som: "+LoginController.getUser().getName());
         message.setVisible(false);
         offset = 0;
-        this.account= account;
-        if(account.getName() != null) {
-            accountLbl.setText(account.getName()+"\n"+account.getBankNr());
-        }else {
-            accountLbl.setText(account.getBankNr());
-        }
+        setAccountLbl();
         loadMoreTransactions();
 
+    }
+
+    private void setAccountLbl(){
+        String accountInfo="";
+        if (account.getName() != null){
+            accountInfo+=account.getName()+"\n";
+        }
+        if(account.getFunction() != null){
+            accountInfo+=account.getFunction()+"\n";
+        }
+        accountInfo+= account.getBankNr()+"\nsaldo: "+account.getBalance();
+        accountLbl.setText(accountInfo);
     }
 
     @FXML
@@ -64,7 +72,7 @@ public class AccountController {
 
             TransactionController controller = loader.getController();
 
-            controller.setTransaction(transaction, DB.getAccounts(LoginController.getUser().getSocialNo()) );
+            controller.setTransaction(transaction, account );
 
             transactionBox.getChildren().add(scene.getRoot());
         } catch (IOException e) {
